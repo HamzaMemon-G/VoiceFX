@@ -1,0 +1,28 @@
+name: Windows tests
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install pinned compiler
+        shell: pwsh
+        run: |
+          Invoke-WebRequest 'https://ziglang.org/download/0.14.1/zig-x86_64-windows-0.14.1.zip' -OutFile compiler.zip
+          Expand-Archive compiler.zip -DestinationPath .compiler
+          Add-Content $env:GITHUB_PATH (Join-Path $pwd '.compiler/zig-x86_64-windows-0.14.1')
+      - name: Set up native app
+        run: ./Setup.ps1
+      - name: Verify audio and UI
+        shell: pwsh
+        run: |
+          foreach ($test in @('test_dsp','test_character','test_audio','test_ui')) {
+            & .venv/Scripts/python.exe "tests/$test.py"
+            if ($LASTEXITCODE -ne 0) { throw "$test failed" }
+          }

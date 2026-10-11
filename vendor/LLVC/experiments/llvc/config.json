@@ -1,0 +1,64 @@
+{
+  "model_params": {
+    "label_len": 1,
+    "L": 16,
+    "enc_dim": 512,
+    "num_enc_layers": 8,
+    "dec_dim": 256,
+    "num_dec_layers": 1,
+    "dec_buf_len": 13,
+    "dec_chunk_size": 13,
+    "out_buf_len": 4,
+    "use_pos_enc": true,
+    "decoder_dropout": 0.1,
+    "convnet_config": {
+      "convnet_prenet": true,
+      "out_channels": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "kernel_sizes": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "dilations": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "dropout": 0.5,
+      "combine_residuals": null,
+      "skip_connection": "add",
+      "use_residual_blocks": true
+    }
+  }
+}
