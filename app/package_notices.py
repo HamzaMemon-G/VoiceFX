@@ -26,5 +26,7 @@ for dist in distributions():
                 shutil.copy2(source, dest)
 shutil.copy2(root / "LICENSE", target / "VoiceFX-MIT.txt")
 shutil.copy2(root / "THIRD-PARTY.md", target / "THIRD-PARTY.md")
+shutil.copy2(root / "THIRD-PARTY.md", root / "dist/VoiceFX/_internal/THIRD-PARTY.md")
 shutil.copy2(root / "README.md", root / "dist/VoiceFX/README.md")
+shutil.copytree(root / "licenses", target / "Qt", dirs_exist_ok=True)
 print("Dependency notices copied into the portable app.")

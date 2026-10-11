@@ -53,6 +53,7 @@ changes Voicemeeter configuration.
 Native effects use 20 ms chunks. AI defaults to stable 104 ms chunks, with two
 chunks of scheduling headroom plus 64 ms character processing. Driver, VBAN,
 network and game buffers add further delay. Chunk size is **not** total latency.
+The MME driver requests a conservative 120 ms buffer for reliable virtual routing.
 Experimental 52 ms AI may stop on a busy laptop. Measure the full round trip by
 recording a clap/reference sound and the returned headphone signal, then compare
 their onsets; lower driver/VBAN buffers only while audio remains reliable.

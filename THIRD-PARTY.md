@@ -7,6 +7,7 @@
   exports retain only inference model parameters; training settings are omitted.
 * SpeechBrain positional encoder — Apache 2.0; extracted implementation.
   License: `vendor/LLVC/SPEECHBRAIN-LICENSE`.
+  https://github.com/speechbrain/speechbrain , `Transformer.py` positional encoder.
 * stftPitchShift — Juri Hock, MIT. https://github.com/jurihock/stftPitchShift
   Revision `1a4f21f6c300a785cce860e374fd63cb5e9ba154`.
   Only cepstral, pitch and resampling primitives are included. Empty package
@@ -22,6 +23,7 @@
   and https://download.qt.io/archive/qt/6.8/6.8.3/single/ .
   Replacing compatible libraries in `_internal/PySide6` is permitted, including
   debugging or reverse engineering changes to those libraries under LGPLv3.
+  Full GPLv3 and LGPLv3 texts are included under `licenses/`.
 * NumPy, SciPy, PyTorch, sounddevice and psutil retain their upstream licenses.
   Installed package notices are included in portable builds.
 * PyInstaller — GPLv2 with the bootloader exception permitting distribution of
