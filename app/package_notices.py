@@ -29,4 +29,12 @@ shutil.copy2(root / "THIRD-PARTY.md", target / "THIRD-PARTY.md")
 shutil.copy2(root / "THIRD-PARTY.md", root / "dist/VoiceFX/_internal/THIRD-PARTY.md")
 shutil.copy2(root / "README.md", root / "dist/VoiceFX/README.md")
 shutil.copytree(root / "licenses", target / "Qt", dirs_exist_ok=True)
+release = (root / "dist/VoiceFX").resolve()
+for cache in release.rglob("__pycache__"):
+    if (
+        cache.is_dir()
+        and not cache.is_symlink()
+        and cache.resolve().is_relative_to(release)
+    ):
+        shutil.rmtree(cache)
 print("Dependency notices copied into the portable app.")
