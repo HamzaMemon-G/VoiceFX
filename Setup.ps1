@@ -8,10 +8,10 @@ try {
     }
     & .venv/Scripts/python.exe -m pip install -r requirements.txt
     if ($LASTEXITCODE -ne 0) { throw 'Dependency installation failed' }
-    if ((Get-Command g++ -ErrorAction SilentlyContinue) -and ((& g++ -dumpmachine) -match 'x86_64')) {
-        & g++ -std=c++11 -O2 -s -shared -static-libgcc -static-libstdc++ native/dsp.cpp -o native/voicefx.dll
-    } elseif (Get-Command zig -ErrorAction SilentlyContinue) {
+    if (Get-Command zig -ErrorAction SilentlyContinue) {
         & zig c++ -target x86_64-windows-gnu -O2 -s -shared native/dsp.cpp -o native/voicefx.dll
+    } elseif ((Get-Command g++ -ErrorAction SilentlyContinue) -and ((& g++ -dumpmachine) -match 'x86_64')) {
+        & g++ -std=c++11 -O2 -s -shared -static -static-libgcc -static-libstdc++ native/dsp.cpp -o native/voicefx.dll
     } else { throw 'Add a 64-bit MinGW g++ compiler or Zig to PATH.' }
     if ($LASTEXITCODE -ne 0) { throw 'Native DSP build failed' }
     if ($AI) {
