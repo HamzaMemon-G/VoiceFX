@@ -85,7 +85,7 @@ include listening previews and reproducibility details. To use them in VoiceFX,
 install the official Beatrice v2 Windows VST3 separately into
 `%LOCALAPPDATA%\VoiceFX\plugins` or the standard Windows VST3 folder. The
 plug-in itself is not bundled with VoiceFX. When installed, Pop Smoke and Opie
-appear in the AI model selector. They use 50 or 100 ms streaming blocks with the same
+appear in the AI model selector after bundle checksums pass. They use 50 or 100 ms streaming blocks with the same
 selected input, output, and optional headphone monitor as other modes. Changing
 voices requires stopping audio first. XPS live performance remains untested.
 

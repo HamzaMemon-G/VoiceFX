@@ -1,6 +1,8 @@
 """Host a separately installed official Beatrice v2 VST3 for local CPU audio."""
 
 import os
+import hashlib
+import json
 import struct
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -35,16 +37,34 @@ def plugin_path():
 def model_path(key):
     if key not in MODELS:
         raise ValueError("Unknown Beatrice voice")
-    model = RESOURCES / "models" / "beatrice" / key / MODELS[key][1]
-    if not model.is_file():
-        raise RuntimeError(f"Beatrice voice bundle missing: {key}")
+    folder = RESOURCES / "models" / "beatrice" / key
+    model = folder / MODELS[key][1]
+    try:
+        provenance = json.loads((folder / "provenance.json").read_text())
+        files = provenance["files"]
+        if provenance["voice"] != key or MODELS[key][1] not in files:
+            raise ValueError("Voice manifest does not match the selected model")
+        for name, expected in files.items():
+            if Path(name).name != name or not isinstance(expected, str) or len(expected) != 64:
+                raise ValueError("Invalid model manifest")
+            if hashlib.sha256((folder / name).read_bytes()).hexdigest() != expected:
+                raise ValueError("Model bundle checksum mismatch")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        raise RuntimeError(f"Beatrice voice bundle missing or changed: {key}") from exc
     return model
 
 
 def installed_models():
     if plugin_path() is None:
         return {}
-    return {key: label for key, (label, _) in MODELS.items() if (RESOURCES / "models" / "beatrice" / key / MODELS[key][1]).is_file()}
+    result = {}
+    for key, (label, _) in MODELS.items():
+        try:
+            model_path(key)
+        except RuntimeError:
+            continue
+        result[key] = label
+    return result
 
 
 def _decode(value):
