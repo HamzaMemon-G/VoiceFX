@@ -55,7 +55,7 @@ class Native:
 
 
 def make_provider(a):
-    if a.model_name not in ("original", "hfg"):
+    if a.model_name not in ("original", "hfg") and not a.model_name.startswith("custom:"):
         return Native(a)
     from engine import Converter
 

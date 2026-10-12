@@ -1,0 +1,15 @@
+# Training tools only. Install the CUDA Torch pair separately first.
+numpy==1.26.4
+scipy==1.15.1
+librosa==0.10.2.post1
+soundfile==0.13.1
+praat-parselmouth==0.4.7
+transformers==4.49.0
+tensorboard>=2.19,<3
+ffmpeg-python==0.2.0
+av>=15.1,<16
+tqdm>=4.67,<5
+scikit-learn>=1.6,<2
+faiss-cpu>=1.13,<2
+matplotlib>=3.8,<3.11
+contourpy<1.4

@@ -19,6 +19,8 @@ with (
 ):
     w = main.Window()
     assert w.input.currentText() == w.output.currentText() == ""
+    assert not w.monitor_button.isChecked()
+    assert not w.monitor_button.isEnabled()
     w.toggle()
     assert w.worker is None
     for mode in main.MODES:
@@ -34,6 +36,7 @@ with (
     w.save()
     w.close()
     restored = main.Window()
+    assert not restored.monitor_button.isChecked()
     assert restored.values()["pitch"] == -7
     restored.close()
 print("PASS: no capture defaults, all modes, character sync and preset persistence")

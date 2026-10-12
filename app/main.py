@@ -21,6 +21,7 @@ from PySide6.QtWidgets import (
 )
 from audio import Audio, devices
 from paths import SETTINGS
+from model_registry import custom_models
 
 MODES = {
     "Local AI": "hfg",
@@ -127,14 +128,32 @@ class Window(QMainWindow):
         right.addWidget(self.input)
         right.addWidget(self.label("Voice destination"))
         right.addWidget(self.output)
+        monitor_label = self.label("Optional headphones for self-monitoring")
+        monitor_label.setWordWrap(True)
+        right.addWidget(monitor_label)
+        self.monitor_device = QComboBox()
+        right.addWidget(self.monitor_device)
+        self.monitor_button = QPushButton("Hear myself · off")
+        self.monitor_button.setCheckable(True)
+        self.monitor_button.toggled.connect(self.monitor_changed)
+        right.addWidget(self.monitor_button)
+        self.monitor_device.currentTextChanged.connect(self.monitor_available)
+        self.output.currentTextChanged.connect(self.monitor_available)
         refresh = QPushButton("Refresh devices")
         refresh.clicked.connect(self.refresh)
         right.addWidget(refresh)
         right.addSpacing(12)
         right.addWidget(self.label("AI model"))
         self.ai_model = QComboBox()
-        self.ai_model.addItems(["HFG target", "Original target"])
-        self.ai_model.setCurrentIndex(int(self.saved.get("ai_model", 0)))
+        self.ai_model.addItem("HFG target", "hfg")
+        self.ai_model.addItem("Original target", "original")
+        for key, (label, _, _) in custom_models().items():
+            self.ai_model.addItem(label, "custom:" + key)
+        saved_model = self.saved.get("ai_model_key")
+        index = self.ai_model.findData(saved_model) if saved_model else -1
+        if index < 0:
+            index = int(self.saved.get("ai_model", 0))
+        self.ai_model.setCurrentIndex(index if 0 <= index < self.ai_model.count() else 0)
         self.get_models = QPushButton("Get AI models")
         self.get_models.clicked.connect(self.download)
         model_row = QHBoxLayout()
@@ -189,6 +208,7 @@ class Window(QMainWindow):
         meter_layout.addWidget(self.metrics)
         right.addStretch()
         self.refresh()
+        self.monitor_available()
         self.choose(self.saved.get("mode", "Local AI"))
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.tick)
@@ -230,6 +250,7 @@ class Window(QMainWindow):
         for combo, items, key in (
             (self.input, ins, "input"),
             (self.output, outs, "output"),
+            (self.monitor_device, outs, "monitor_device"),
         ):
             wanted = combo.currentText() or self.saved.get(key, "")
             combo.clear()
@@ -328,6 +349,7 @@ class Window(QMainWindow):
         self.audio.gate_db = v["gate_db"]
         self.audio.volume = v["volume"] / 100
         self.audio.mute = self.mute.isChecked()
+        self.audio.monitor.enabled = self.monitor_button.isChecked()
         if self.mode == "Local AI":
             self.audio.pitch = v["pitch"]
             self.audio.formant = v["formant"]
@@ -337,6 +359,22 @@ class Window(QMainWindow):
             )
             if "carrier" in v:
                 self.audio.effect["pitch"] = round((v["carrier"] - 55) * 9 / 40)
+
+    def monitor_changed(self, enabled):
+        if enabled and not self.monitor_device.currentText():
+            self.monitor_button.setChecked(False)
+            self.status.setText("Choose headphones for self-monitoring first.")
+            return
+        self.monitor_button.setText("Hear myself · on" if enabled else "Hear myself · off")
+        self.live()
+
+    def monitor_available(self, *args):
+        available = bool(self.monitor_device.currentText()) and (
+            self.monitor_device.currentText() != self.output.currentText()
+        )
+        if not available and self.monitor_button.isChecked():
+            self.monitor_button.setChecked(False)
+        self.monitor_button.setEnabled(available)
 
     def save(self):
         self.presets[self.mode] = {
@@ -349,8 +387,10 @@ class Window(QMainWindow):
             mode=self.mode,
             input=self.input.currentText(),
             output=self.output.currentText(),
+            monitor_device=self.monitor_device.currentText(),
             presets=self.presets,
             ai_model=self.ai_model.currentIndex(),
+            ai_model_key=self.ai_model.currentData(),
             buffer=self.buffer.currentIndex(),
         )
         SETTINGS.write_text(json.dumps(data, indent=2))
@@ -368,7 +408,7 @@ class Window(QMainWindow):
             self.status.setText("Choose an explicit input and output device.")
             return
         model = (
-            ("hfg" if self.ai_model.currentIndex() == 0 else "original")
+            self.ai_model.currentData()
             if self.mode == "Local AI"
             else MODES[self.mode]
         )
@@ -378,6 +418,7 @@ class Window(QMainWindow):
             self.messages.put,
             model,
             8 if self.buffer.currentIndex() == 0 else 4,
+            monitor_name=self.monitor_device.currentText(),
         )
         self.live()
         self.worker = threading.Thread(target=self.audio.run, daemon=True)
@@ -387,6 +428,7 @@ class Window(QMainWindow):
             *self.buttons.values(),
             self.input,
             self.output,
+            self.monitor_device,
             self.buffer,
             self.ai_model,
             self.get_models,
@@ -427,7 +469,7 @@ class Window(QMainWindow):
             self.worker = None
             self.start.setText("Start voice")
             self.start.setEnabled(True)
-            for w in (*self.buttons.values(), self.input, self.output):
+            for w in (*self.buttons.values(), self.input, self.output, self.monitor_device):
                 w.setEnabled(True)
             self.buffer.setEnabled(self.mode == "Local AI")
             self.ai_model.setEnabled(self.mode == "Local AI")
