@@ -1,0 +1,26 @@
+{
+  "voice": "opie",
+  "status": "listening-approved pilot preview; XPS and live routing not validated",
+  "trainer": "fierce-cats/beatrice-trainer",
+  "trainer_revision": "f34836de014b86956096878aecb8d3b17feaaa0b",
+  "training_config_sha256": "af4be830408a80e9ff67d8c08047f56d9848a4ad94748660642e5452d24395a0",
+  "source_manifest_sha256": "5fc461993f542a3d6b712dd75029640f641ec794c6b95cc63d90001c1ab1d827",
+  "step": 80,
+  "source_urls": [
+    "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+    "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+    "https://www.youtube.com/watch?v=yaAwEWMPo64"
+  ],
+  "files": {
+    "beatrice_paraphernalia_train_00000080.toml": "6fbaec8107524ce9774352816fb9e3224f8cc4bc6000bb9261c1abb316494418",
+    "embedding_setter.bin": "ba125cf2971c3d6d4177ae27782e0a2b666f01ff7c600a982a4532baaa57335d",
+    "noimage.png": "eb0ffccb330d4476f49405b6248fb080e19578bb397b6a1d8b64f1bc80eb1c5b",
+    "phone_extractor.bin": "07c0f87a6a05403d232d1f34d621f8525090d6fb1d14249adec18451cdb451de",
+    "pitch_estimator.bin": "a99cba14478c6e8a8a727191316f0df5ff1951f968316d5e464356aa5b1708f1",
+    "preview.wav": "a680ba94b5f85a172304fa1e81b00c64e11f501bef62a4b63c38b9ff9ffbbbc9",
+    "source-manifest.json": "5fc461993f542a3d6b712dd75029640f641ec794c6b95cc63d90001c1ab1d827",
+    "speaker_embeddings.bin": "a77a4f7ce2ee2e670b5c53bd2a4abd494413c1f11dddb00eb13674d1a574bdd1",
+    "waveform_generator.bin": "3880ba57fea5a57030c34fd8e84f84641e8154404a7a942a3a2372f588b3c5fc"
+  },
+  "source_manifest_original_sha256": "48302ddbfbec2ece8539febb5c9e8f2f03f493b7fd75da1edc2510fa5a9934c6"
+}

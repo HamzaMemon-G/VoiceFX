@@ -11,6 +11,7 @@ from scipy.signal import butter, sosfilt
 
 ROOT = Path(__file__).resolve().parent
 from paths import RESOURCES
+from model_registry import custom_models
 
 MODELS = {
     "original": (
@@ -32,7 +33,15 @@ from character import Character
 class Converter:
     def __init__(self, threads=2, factor=4, model_name="original"):
         torch.set_num_threads(threads)
-        filename, experiment, checksum = MODELS[model_name]
+        if model_name.startswith("custom:"):
+            key = model_name.partition(":")[2]
+            available = custom_models()
+            if key not in available:
+                raise RuntimeError("Custom AI model is missing or has no checksum.")
+            _, filename, checksum = available[key]
+            experiment = "llvc"
+        else:
+            filename, experiment, checksum = MODELS[model_name]
         config = json.loads(
             (
                 RESOURCES / "vendor/LLVC/experiments" / experiment / "config.json"

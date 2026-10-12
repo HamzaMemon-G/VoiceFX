@@ -53,6 +53,10 @@ changes Voicemeeter configuration.
 Native effects use 20 ms chunks. AI defaults to stable 104 ms chunks, with two
 chunks of scheduling headroom plus 64 ms character processing. Driver, VBAN,
 network and game buffers add further delay. Chunk size is **not** total latency.
+Beatrice voices first check 50 ms chunks through the official VST3 and fall back
+to 100 ms chunks if needed; the response menu does not change their block size.
+The desktop offline benchmark does not predict XPS performance or end-to-end
+game latency.
 The MME driver requests a conservative 120 ms buffer for reliable virtual routing.
 Experimental 52 ms AI may stop on a busy laptop. Measure the full round trip by
 recording a clap/reference sound and the returned headphone signal, then compare
@@ -72,6 +76,19 @@ Use your own judgment and server rules when using voice effects.
 
 ## Development
 
+For separate desktop GPU training and the custom LLVC model path, see
+[Offline custom voice training](training/README.md). The training preflight is
+independent of the CPU-only real-time app and does not change audio routing.
+
+The separately trained [Beatrice v2 pilot voices](models/beatrice/README.md)
+include listening previews and reproducibility details. To use them in VoiceFX,
+install the official Beatrice v2 Windows VST3 separately into
+`%LOCALAPPDATA%\VoiceFX\plugins` or the standard Windows VST3 folder. The
+plug-in itself is not bundled with VoiceFX. When installed, Pop Smoke and Opie
+appear in the AI model selector after bundle checksums pass. They use 50 or 100 ms streaming blocks with the same
+selected input, output, and optional headphone monitor as other modes. Changing
+voices requires stopping audio first. XPS live performance remains untested.
+
 ```powershell
 .venv\Scripts\python.exe tests\test_dsp.py
 .venv\Scripts\python.exe tests\test_character.py
@@ -81,5 +98,26 @@ Use your own judgment and server rules when using voice effects.
 MIT for the application and native DSP. Third-party licenses and pinned source
 revisions are listed in [THIRD-PARTY.md](THIRD-PARTY.md). The Windows interface
 uses dynamically linked PySide6/Qt under LGPLv3; its library licenses travel with
-the release. Contributions welcome. Windows 10/11, 64-bit; other platforms are
+the release. Portable builds including Pedalboard also include its GPLv3 license
+and dependency notices. Contributions welcome. Windows 10/11, 64-bit; other platforms are
 not currently supported.
+
+## Self-monitoring
+
+Choose an optional headphone device separate from the voice destination before
+starting. **Hear myself** turns VoiceFX's own headphone feed on or off while
+the voice destination continues. Monitoring starts off each time the app opens.
+**Mute output** still silences the voice destination.
+
+This control does not change Voicemeeter or VBAN routing. If Voicemeeter itself
+already sends your voice to your headphones, that external playback remains.
+
+## Custom CPU models
+
+When a trained LLVC checkpoint has passed quality and CPU performance checks,
+put it in the local `VoiceFX/models` data folder as `pop-smoke-llvc.pth` or
+`opie-llvc.pth`. Record its lowercase SHA-256 checksum in
+`custom-models.json` under the matching `pop_smoke` or `opie` key. The app then
+shows it in the AI model selector. It checks the checksum and loads weights
+strictly against the existing LLVC architecture; an RVC training checkpoint
+cannot be used there. The built-in models retain their original checksums.

@@ -1,0 +1,19 @@
+[model]
+version = "2.0.0-rc.0"
+name = "VoiceFX opie pilot"
+description = """
+Opie / Elanip Beatrice listening-selected pilot; experimental, listening-approved preview only
+"""
+
+[voice.0]
+name = "opie"
+description = """
+No description for this voice.
+この声の説明はありません。
+"""
+average_pitch = 46.375
+
+[voice.0.portrait]
+path = "noimage.png"
+description = """
+"""
