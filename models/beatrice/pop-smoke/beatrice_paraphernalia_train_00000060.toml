@@ -1,0 +1,19 @@
+[model]
+version = "2.0.0-rc.0"
+name = "VoiceFX pop-smoke pilot"
+description = """
+Pop Smoke Beatrice listening-selected pilot; experimental, listening-approved preview only
+"""
+
+[voice.0]
+name = "pop_smoke"
+description = """
+No description for this voice.
+この声の説明はありません。
+"""
+average_pitch = 41.75
+
+[voice.0.portrait]
+path = "noimage.png"
+description = """
+"""

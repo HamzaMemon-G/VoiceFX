@@ -76,6 +76,11 @@ For separate desktop GPU training and the custom LLVC model path, see
 [Offline custom voice training](training/README.md). The training preflight is
 independent of the CPU-only real-time app and does not change audio routing.
 
+The separately trained [Beatrice v2 pilot voices](models/beatrice/README.md)
+include listening previews and reproducibility details. They require a compatible
+Beatrice client; VoiceFX does not yet load them, and XPS live performance remains
+untested.
+
 ```powershell
 .venv\Scripts\python.exe tests\test_dsp.py
 .venv\Scripts\python.exe tests\test_character.py
