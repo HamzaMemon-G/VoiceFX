@@ -53,6 +53,9 @@ changes Voicemeeter configuration.
 Native effects use 20 ms chunks. AI defaults to stable 104 ms chunks, with two
 chunks of scheduling headroom plus 64 ms character processing. Driver, VBAN,
 network and game buffers add further delay. Chunk size is **not** total latency.
+Beatrice voices use 100 ms chunks through the official VST3; the response menu
+does not change their block size. Their desktop offline benchmark does not
+predict XPS performance or end-to-end game latency.
 The MME driver requests a conservative 120 ms buffer for reliable virtual routing.
 Experimental 52 ms AI may stop on a busy laptop. Measure the full round trip by
 recording a clap/reference sound and the returned headphone signal, then compare
@@ -77,9 +80,13 @@ For separate desktop GPU training and the custom LLVC model path, see
 independent of the CPU-only real-time app and does not change audio routing.
 
 The separately trained [Beatrice v2 pilot voices](models/beatrice/README.md)
-include listening previews and reproducibility details. They require a compatible
-Beatrice client; VoiceFX does not yet load them, and XPS live performance remains
-untested.
+include listening previews and reproducibility details. To use them in VoiceFX,
+install the official Beatrice v2 Windows VST3 separately into
+`%LOCALAPPDATA%\VoiceFX\plugins` or the standard Windows VST3 folder. The
+plug-in itself is not bundled with VoiceFX. When installed, Pop Smoke and Opie
+appear in the AI model selector. They use 100 ms streaming blocks with the same
+selected input, output, and optional headphone monitor as other modes. Changing
+voices requires stopping audio first. XPS live performance remains untested.
 
 ```powershell
 .venv\Scripts\python.exe tests\test_dsp.py

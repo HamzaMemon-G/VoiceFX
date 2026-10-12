@@ -26,5 +26,9 @@
   Full GPLv3 and LGPLv3 texts are included under `licenses/`.
 * NumPy, SciPy, PyTorch, sounddevice and psutil retain their upstream licenses.
   Installed package notices are included in portable builds.
+* Pedalboard — Spotify, GPLv3. Used to host a separately installed Beatrice VST3;
+  package notice is included in portable builds. https://github.com/spotify/pedalboard
+* Beatrice v2 VST3 — official plug-in, installed separately by the user and not
+  redistributed in VoiceFX. https://prj-beatrice.com/?s=04
 * PyInstaller — GPLv2 with the bootloader exception permitting distribution of
   bundled applications under their own license.

@@ -15,11 +15,12 @@ Beatrice 2.0.0-rc.0 paraphernalia bundle with a valid portrait and a
 `provenance.json` recording the step, source URLs, hashes and training config
 hash. The source clips and large optimizer checkpoints are kept out of Git.
 
-**Current status:** These previews received positive listening feedback, but
-have not been tested as a live stream or on the XPS. VoiceFX's current AI engine
-loads LLVC checkpoints, not Beatrice bundles. Use a compatible Beatrice 2.0.0-rc.0
-client to audition these bundles until a Beatrice runtime is integrated and
-benchmarked in VoiceFX. Keep existing device and Voicemeeter/VBAN settings.
+**Current status:** These previews received positive listening feedback. VoiceFX
+can now load either bundle through a separately installed official Beatrice v2
+VST3. Offline 100 ms streaming on the training desktop took about 20 ms per
+block at the 95th percentile. The XPS and live audio routing are still untested,
+and custom names in synthesized greetings remain unreliable. Keep existing
+device and Voicemeeter/VBAN settings.
 
 To make checksum-checked import archives for a compatible Beatrice v2 client,
 run `python tools/package_beatrice_models.py` from the repository root. The two

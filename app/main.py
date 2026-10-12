@@ -22,6 +22,7 @@ from PySide6.QtWidgets import (
 from audio import Audio, devices
 from paths import SETTINGS
 from model_registry import custom_models
+from beatrice_vst import installed_models
 
 MODES = {
     "Local AI": "hfg",
@@ -149,6 +150,8 @@ class Window(QMainWindow):
         self.ai_model.addItem("Original target", "original")
         for key, (label, _, _) in custom_models().items():
             self.ai_model.addItem(label, "custom:" + key)
+        for key, label in installed_models().items():
+            self.ai_model.addItem(label, "beatrice:" + key)
         saved_model = self.saved.get("ai_model_key")
         index = self.ai_model.findData(saved_model) if saved_model else -1
         if index < 0:

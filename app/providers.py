@@ -55,6 +55,21 @@ class Native:
 
 
 def make_provider(a):
+    if a.model_name.startswith("beatrice:"):
+        from beatrice_vst import Beatrice
+        model = Beatrice(a.model_name.split(":", 1)[1])
+        import time
+        samples = []
+        silence = np.zeros(model.frames, dtype=np.float32)
+        for i in range(24):
+            start = time.perf_counter()
+            model.convert48(silence, a.pitch, a.formant)
+            if i >= 4:
+                samples.append((time.perf_counter() - start) * 1000)
+        if np.percentile(samples, 95) > model.ms * 0.8:
+            raise RuntimeError("Beatrice cannot sustain 100 ms audio on this computer.")
+        model.reset()
+        return model
     if a.model_name not in ("original", "hfg") and not a.model_name.startswith("custom:"):
         return Native(a)
     from engine import Converter
