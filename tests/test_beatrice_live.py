@@ -23,25 +23,28 @@ def run(source_path):
         source = source.reshape(-1, wav.getnchannels()).mean(axis=1)
     if rate != 48000:
         source = resample_poly(source, 48000, rate).astype("float32")
-    source = np.pad(source, (0, -len(source) % 4800))
     for key in ("pop-smoke", "opie"):
-        model = Beatrice(key)
-        blocks = []
-        times = []
-        for offset in range(0, len(source), 4800):
-            start = time.perf_counter()
-            blocks.append(model.convert48(source[offset:offset + 4800], -5, -1))
-            times.append((time.perf_counter() - start) * 1000)
-        streamed = np.concatenate(blocks)
-        batch_model = Beatrice(key)
-        batch_model.plugin.pitch_shift_st = -5.0
-        batch_model.plugin.formant_shift_st = -1.0
-        batch = np.asarray(batch_model.plugin.process(source[None, :], sample_rate=48000, buffer_size=4800, reset=False)).reshape(-1)
-        error = float(np.max(np.abs(streamed - batch)))
-        print(key, "p95_ms", round(float(np.percentile(times[5:], 95)), 2), "max_error", error, "output_rms", round(float(np.sqrt(np.mean(streamed ** 2))), 5))
-        assert error < 1e-5, "Block and batch conversions differ"
-        assert np.isfinite(streamed).all() and np.sqrt(np.mean(streamed ** 2)) > 0.001
-        assert np.percentile(times[5:], 95) < 80, "Desktop cannot sustain real-time processing"
+        for frames in (2400, 4800):
+            padded = np.pad(source, (0, -len(source) % frames))
+            model = Beatrice(key)
+            model.frames, model.ms = frames, frames // 48
+            blocks = []
+            times = []
+            for offset in range(0, len(padded), frames):
+                start = time.perf_counter()
+                blocks.append(model.convert48(padded[offset:offset + frames], -5, -1))
+                times.append((time.perf_counter() - start) * 1000)
+            streamed = np.concatenate(blocks)
+            batch_model = Beatrice(key)
+            batch_model.plugin.pitch_shift_st = -5.0
+            batch_model.plugin.formant_shift_st = -1.0
+            batch = np.asarray(batch_model.plugin.process(padded[None, :], sample_rate=48000, buffer_size=frames, reset=False)).reshape(-1)
+            error = float(np.max(np.abs(streamed - batch)))
+            p95 = float(np.percentile(times[5:], 95))
+            print(key, model.ms, "ms p95", round(p95, 2), "max_error", error, "output_rms", round(float(np.sqrt(np.mean(streamed ** 2))), 5))
+            assert error < 1e-5, "Block and batch conversions differ"
+            assert np.isfinite(streamed).all() and np.sqrt(np.mean(streamed ** 2)) > 0.001
+            assert p95 < model.ms * 0.8, "Desktop cannot sustain real-time processing"
 
 
 if __name__ == "__main__":

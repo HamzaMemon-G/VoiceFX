@@ -11,8 +11,8 @@ from paths import DATA, RESOURCES
 
 ALPHABET = ".ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+"
 MODELS = {
-    "pop-smoke": ("Pop Smoke (Beatrice)", "beatrice_paraphernalia_train_00000060.toml"),
-    "opie": ("Opie / Elanip (Beatrice)", "beatrice_paraphernalia_train_00000080.toml"),
+    "pop-smoke": ("Pop Smoke · Beatrice trial", "beatrice_paraphernalia_train_00000060.toml"),
+    "opie": ("Opie / Elanip · Beatrice trial", "beatrice_paraphernalia_train_00000080.toml"),
 }
 
 
@@ -121,8 +121,8 @@ def _with_model(raw, model):
 
 
 class Beatrice:
-    frames = 4800
-    ms = 100
+    frames = 2400
+    ms = 50
 
     def __init__(self, key):
         vst = plugin_path()
@@ -141,7 +141,7 @@ class Beatrice:
 
     def convert48(self, x, pitch=0, formant=0):
         if len(x) != self.frames:
-            raise ValueError("Beatrice requires 100 ms audio blocks")
+            raise ValueError("Beatrice requires its selected audio block size")
         if pitch != self._pitch:
             self.plugin.pitch_shift_st = float(pitch)
             self._pitch = pitch

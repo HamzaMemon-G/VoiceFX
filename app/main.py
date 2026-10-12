@@ -169,6 +169,7 @@ class Window(QMainWindow):
         self.buffer.addItems(["Stable · 104 ms", "Experimental · 52 ms"])
         self.buffer.setCurrentIndex(int(self.saved.get("buffer", 0)))
         right.addWidget(self.buffer)
+        self.ai_model.currentIndexChanged.connect(self.model_changed)
         advanced = QPushButton("Microphone controls")
         advanced.setCheckable(True)
         right.addWidget(advanced)
@@ -213,6 +214,7 @@ class Window(QMainWindow):
         self.refresh()
         self.monitor_available()
         self.choose(self.saved.get("mode", "Local AI"))
+        self.model_changed()
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.tick)
         self.timer.start(100)
@@ -281,7 +283,7 @@ class Window(QMainWindow):
                 del self.controls[k]
         self.character.setVisible(name == "Local AI")
         self.character_label.setVisible(name == "Local AI")
-        self.buffer.setEnabled(name == "Local AI")
+        self.buffer.setEnabled(name == "Local AI" and not str(self.ai_model.currentData()).startswith("beatrice:"))
         self.ai_model.setEnabled(name == "Local AI")
         values = {} if reset else self.presets.get(name, {})
         if name == "Local AI":
@@ -325,6 +327,12 @@ class Window(QMainWindow):
         for k, v in zip(("pitch", "formant"), CHARACTERS[name]):
             if k in self.controls:
                 self.controls[k].setValue(int(v * 10))
+
+    def model_changed(self, *args):
+        beatrice = str(self.ai_model.currentData()).startswith("beatrice:")
+        self.buffer.setEnabled(self.mode == "Local AI" and not beatrice and not (self.worker and self.worker.is_alive()))
+        if beatrice and not (self.worker and self.worker.is_alive()):
+            self.status.setText("Beatrice trial selects its live response automatically. Start with your own mic for a fair voice test.")
 
     def sync_character(self):
         v = self.values()
@@ -474,7 +482,7 @@ class Window(QMainWindow):
             self.start.setEnabled(True)
             for w in (*self.buttons.values(), self.input, self.output, self.monitor_device):
                 w.setEnabled(True)
-            self.buffer.setEnabled(self.mode == "Local AI")
+            self.buffer.setEnabled(self.mode == "Local AI" and not str(self.ai_model.currentData()).startswith("beatrice:"))
             self.ai_model.setEnabled(self.mode == "Local AI")
             self.inmeter.setValue(0)
             self.outmeter.setValue(0)

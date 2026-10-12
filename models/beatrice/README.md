@@ -17,8 +17,8 @@ hash. The source clips and large optimizer checkpoints are kept out of Git.
 
 **Current status:** These previews received positive listening feedback. VoiceFX
 can now load either bundle through a separately installed official Beatrice v2
-VST3. Offline 100 ms streaming on the training desktop took about 20 ms per
-block at the 95th percentile. The XPS and live audio routing are still untested,
+VST3. Offline 50 ms streaming on the training desktop took about 11–15 ms per
+block at the 95th percentile; 100 ms is the fallback for slower CPUs. The XPS and live audio routing are still untested,
 and custom names in synthesized greetings remain unreliable. Keep existing
 device and Voicemeeter/VBAN settings.
 
