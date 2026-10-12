@@ -21,5 +21,10 @@ loads LLVC checkpoints, not Beatrice bundles. Use a compatible Beatrice 2.0.0-rc
 client to audition these bundles until a Beatrice runtime is integrated and
 benchmarked in VoiceFX. Keep existing device and Voicemeeter/VBAN settings.
 
+To make checksum-checked import archives for a compatible Beatrice v2 client,
+run `python tools/package_beatrice_models.py` from the repository root. The two
+ZIPs appear under `dist/beatrice-import/`; the source bundles are untouched.
+Importing a model does not configure audio devices or prove live CPU latency.
+
 The models can imitate identifiable public voices. Label generated audio clearly
 when sharing it, and use it in ways that respect the speakers and platform rules.
