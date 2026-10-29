@@ -65,3 +65,14 @@ against public and private held-out waveforms. Private artifacts stay local.
 sequence numbers, input wait, model computation and pipe roundtrip duration.
 These diagnostics contain no audio or input paths. They distinguish conversion
 cost from transport overhead; they do not measure physical end-to-end latency.
+
+An explicit experimental `dynamic_block_base=4` option applies ONNX Runtime's
+dynamic work scheduling to pitch and synthesis sessions. The worker acknowledges
+the requested option during startup. The default remains `0`; no saved settings
+or audio route is changed. A public paired trial retained identical output and
+reduced observed timing spikes. Separate-process public and private Recording5
+parity checks subsequently passed, and a 320-second public callback simulation
+played all samples without a stream fault using explicit startup buffering.
+Broader sustained speech tests, physical latency, microphone and laptop testing
+remain outstanding. This option is still experimental and is not enabled by the
+audio app.

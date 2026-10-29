@@ -25,7 +25,9 @@ class FrozenRvcCpu:
     frames = 9600
     ms = 200
 
-    def __init__(self, snapshot, rvc_root, ort_packages):
+    def __init__(self, snapshot, rvc_root, ort_packages, *, dynamic_block_base=0):
+        if type(dynamic_block_base) is not int or dynamic_block_base not in (0, 4):
+            raise ValueError("Unsupported experimental scheduling option")
         if "torch" in sys.modules:
             raise RuntimeError("Load this backend in a dedicated worker process")
         snapshot, rvc_root = Path(snapshot).resolve(), Path(rvc_root).resolve()
@@ -83,6 +85,8 @@ class FrozenRvcCpu:
             options.intra_op_num_threads = threads
             options.inter_op_num_threads = 1
             options.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
+            if dynamic_block_base:
+                options.add_session_config_entry("session.dynamic_block_base", str(dynamic_block_base))
             for key in ("session.intra_op.allow_spinning", "session.inter_op.allow_spinning"):
                 options.add_session_config_entry(key, "0")
             return ort.InferenceSession(str(path), sess_options=options,

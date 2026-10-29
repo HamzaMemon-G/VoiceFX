@@ -13,6 +13,10 @@ from rvc_cpu_worker import FrozenRvcCpu
 
 
 class WorkerValidation(unittest.TestCase):
+    def test_unsupported_scheduling_rejected_before_runtime_load(self):
+        with self.assertRaises(ValueError):
+            FrozenRvcCpu("unused", "unused", "unused", dynamic_block_base=-1)
+
     def test_host_with_existing_torch_must_use_separate_worker(self):
         with patch.dict(sys.modules, {"torch": object()}):
             with self.assertRaisesRegex(RuntimeError, "dedicated worker"):

@@ -29,7 +29,9 @@ class RvcProcessStream:
 
     def __init__(self, python, snapshot, rvc_root, ort_packages, log_file, *,
                  startup_packets, max_packets, startup_timeout=600,
-                 conversion_timeout=5, pitch=-9):
+                 conversion_timeout=5, pitch=-9, dynamic_block_base=0):
+        if type(dynamic_block_base) is not int or dynamic_block_base not in (0, 4):
+            raise ValueError("Unsupported experimental scheduling option")
         if not math.isfinite(pitch) or not -24 <= pitch <= 24:
             raise ValueError("Invalid pitch")
         if (not math.isfinite(startup_timeout) or not math.isfinite(conversion_timeout)
@@ -47,9 +49,11 @@ class RvcProcessStream:
         self._sequence = 0
         self._process = None
         self._pitch = pitch
+        self._dynamic_block_base = dynamic_block_base
         self._last_compute_ms = None
         command = [str(python), "-u", str(SERVICE_PATH), "--snapshot", str(snapshot),
-                   "--rvc-root", str(rvc_root), "--ort-packages", str(ort_packages)]
+                   "--rvc-root", str(rvc_root), "--ort-packages", str(ort_packages),
+                   "--dynamic-block-base", str(dynamic_block_base)]
         self._thread = Thread(target=self._run,
             args=(command, Path(log_file), startup_timeout, conversion_timeout),
             daemon=True, name="voicefx-transport")
@@ -98,7 +102,9 @@ class RvcProcessStream:
                 reader = Thread(target=self._reader, args=(process.stdout,), daemon=True)
                 reader.start()
                 message = self._receive(startup_timeout)
-                if message != dict(type="ready", frames=self.frames, sample_rate=48000):
+                if (message.get("type") != "ready" or message.get("frames") != self.frames
+                        or message.get("sample_rate") != 48000
+                        or message.get("dynamic_block_base", 0) != self._dynamic_block_base):
                     raise RuntimeError("CPU worker format mismatch")
                 if not self._stop.is_set():
                     self._ready.set()
@@ -181,6 +187,7 @@ class RvcProcessStream:
         return dict(self.buffer.status(), ready=self._ready.is_set(),
                     queued_input_packets=self._inputs.qsize(),
                     worker_pid=self._process.pid if self._process else None,
+                    experimental_dynamic_block_base=self._dynamic_block_base,
                     last_compute_ms=self._last_compute_ms)
 
     def metrics(self):

@@ -24,12 +24,13 @@ class ProcessContracts(unittest.TestCase):
             self.stream.close()
         self.directory.cleanup()
 
-    def create(self, mode="normal", capacity=3, conversion_timeout=2):
+    def create(self, mode="normal", capacity=3, conversion_timeout=2, dynamic=0):
         service = self.root / "fake_service.py"
         service.write_text('''import json,sys,time
 mode=MODE
+dynamic=int(sys.argv[sys.argv.index('--dynamic-block-base')+1])
 time.sleep(10 if mode=='slow_start' else .1)
-print(json.dumps(dict(type='ready',frames=9600,sample_rate=48000)),flush=True)
+print(json.dumps(dict(type='ready',frames=9600,sample_rate=48000,dynamic_block_base=0 if mode=='bad_schedule' else dynamic)),flush=True)
 for line in sys.stdin:
  m=json.loads(line)
  if m['type']=='stop':break
@@ -40,7 +41,8 @@ for line in sys.stdin:
         with patch("rvc_process.SERVICE_PATH", service):
             self.stream = RvcProcessStream(sys.executable, "unused", "unused", "unused",
                 self.root / "worker.log", startup_packets=1, max_packets=capacity,
-                startup_timeout=15, conversion_timeout=conversion_timeout)
+                startup_timeout=15, conversion_timeout=conversion_timeout,
+                dynamic_block_base=dynamic)
         return self.stream
 
     def wait(self, predicate, timeout=5):
@@ -76,6 +78,15 @@ for line in sys.stdin:
         self.wait(lambda: stream.status()["state"] == "fault")
         self.assertFalse(stream.read(9600).any())
         self.assertFalse(stream.submit(np.ones(9600)))
+
+    def test_experimental_scheduling_requires_matching_acknowledgement(self):
+        stream = self.create(dynamic=4)
+        self.wait(lambda: stream.status()["ready"])
+        self.assertEqual(stream.status()["experimental_dynamic_block_base"], 4)
+        stream.close()
+        stream = self.create("bad_schedule", dynamic=4)
+        self.wait(lambda: stream.status()["state"] == "fault")
+        self.assertFalse(stream.status()["ready"])
 
     def test_slow_worker_has_bounded_input_and_output(self):
         stream = self.create("slow", capacity=1)
