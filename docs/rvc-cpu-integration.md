@@ -60,3 +60,8 @@ real preserved runtime and checks public-audio parity, callback-boundary sample
 retention and fail-closed behavior. Its report is outside the repository.
 `work/validate_app_process_stream.py` additionally checks the real pipe transport
 against public and private held-out waveforms. Private artifacts stay local.
+
+`RvcProcessStream.metrics()` keeps at most 256 packet timing records, containing
+sequence numbers, input wait, model computation and pipe roundtrip duration.
+These diagnostics contain no audio or input paths. They distinguish conversion
+cost from transport overhead; they do not measure physical end-to-end latency.

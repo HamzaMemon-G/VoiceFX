@@ -61,6 +61,11 @@ for line in sys.stdin:
         self.wait(lambda: stream.status()["buffered_frames"] == 9600)
         output = np.concatenate((stream.read(4096), stream.read(5504)))
         np.testing.assert_array_equal(output, audio)
+        metrics = stream.metrics()
+        self.assertEqual(len(metrics), 1)
+        self.assertEqual(metrics[0]["sequence"], 0)
+        self.assertGreaterEqual(metrics[0]["roundtrip_ms"], 0)
+        self.assertNotIn("audio", metrics[0])
         stream.close()
         self.assertIsNotNone(stream._process.poll())
 

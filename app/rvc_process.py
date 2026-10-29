@@ -1,11 +1,13 @@
 """Optional bounded local process transport; not enabled by the audio app."""
 
 import base64
+from collections import deque
 import json
 import math
 from pathlib import Path
 from queue import Empty, Full, Queue
 import subprocess
+import time
 from threading import Event, Lock, Thread
 
 import numpy as np
@@ -40,6 +42,8 @@ class RvcProcessStream:
         self._stop = Event()
         self._ready = Event()
         self._submit_lock = Lock()
+        self._metrics_lock = Lock()
+        self._metrics = deque(maxlen=256)
         self._sequence = 0
         self._process = None
         self._pitch = pitch
@@ -100,11 +104,12 @@ class RvcProcessStream:
                     self._ready.set()
                 while not self._stop.is_set():
                     try:
-                        sequence, packet = self._inputs.get(timeout=.05)
+                        sequence, packet, enqueued = self._inputs.get(timeout=.05)
                     except Empty:
                         continue
                     request = dict(type="convert", sequence=sequence, pitch=self._pitch,
                                    audio=base64.b64encode(packet).decode("ascii"))
+                    sent = time.perf_counter()
                     process.stdin.write(json.dumps(request) + "\n")
                     process.stdin.flush()
                     message = self._receive(conversion_timeout)
@@ -122,6 +127,11 @@ class RvcProcessStream:
                     if self._stop.is_set():
                         break
                     self._last_compute_ms = compute_ms
+                    received = time.perf_counter()
+                    with self._metrics_lock:
+                        self._metrics.append(dict(sequence=sequence, compute_ms=compute_ms,
+                            input_wait_ms=1000 * (sent - enqueued),
+                            roundtrip_ms=1000 * (received - sent)))
                     self.buffer.push(sequence, np.frombuffer(raw, dtype="<f4"))
                 if process.poll() is None:
                     process.stdin.write('{"type":"stop"}\n')
@@ -153,7 +163,7 @@ class RvcProcessStream:
                 packet = np.array(audio, dtype="<f4", copy=True)
                 if packet.shape != (self.frames,) or not np.isfinite(packet).all():
                     raise ValueError("Invalid capture packet")
-                self._inputs.put_nowait((self._sequence, packet.tobytes()))
+                self._inputs.put_nowait((self._sequence, packet.tobytes(), time.perf_counter()))
                 self._sequence += 1
                 return True
             except (TypeError, ValueError, OverflowError, Full):
@@ -172,6 +182,11 @@ class RvcProcessStream:
                     queued_input_packets=self._inputs.qsize(),
                     worker_pid=self._process.pid if self._process else None,
                     last_compute_ms=self._last_compute_ms)
+
+    def metrics(self):
+        """Last 256 packet timing records; contains no audio or file paths."""
+        with self._metrics_lock:
+            return list(self._metrics)
 
     def close(self):
         self._stop.set()
