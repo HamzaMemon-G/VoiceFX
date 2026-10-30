@@ -108,3 +108,25 @@ complete model packets and reads corresponding output without model or pipe I/O
 in the callback. It discards pre-ready capture, rejects invalid channels/samples,
 and performs no gain, character processing, device selection or routing. It is
 offline-tested and is not wired to the application's audio host yet.
+
+The synthesis-only, above-normal worker subsequently underflowed on both public
+ten-minute trials, after approximately 560 and 482 seconds. Scheduling changes
+therefore do not establish reliable playback. No live mode has been enabled.
+
+An explicit `recover_underflow=True` diagnostic selects `TimelineAudioBuffer`;
+the default remains `False` and keeps the original fault-on-underflow behavior.
+Recovery preserves the existing queue limits and output timeline. Missing audio
+is replaced with silence, counted as `missing_samples`, and never replayed later.
+Late packets are trimmed or discarded at their original sample positions;
+`late_discarded_samples` records that loss. `underflow_events` counts callbacks
+that contained missing samples, rather than distinct contiguous outage periods.
+Corrupt packets, transport failures and queue overflow still stop the stream.
+
+This option handles a dropout without permanently stopping otherwise valid
+processing; it does not make model computation faster or satisfy zero-loss live
+performance requirements. Healthy private Recording5 process output retained
+the same maximum waveform difference of approximately `3.714e-5`, with zero
+missing samples before an intentional underflow probe. Public sustained recovery
+diagnostics report sample loss separately from completion. A run with any missing
+samples must not be described as a reliability pass. No microphone, physical
+latency, gaming or XPS validation is implied.

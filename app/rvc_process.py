@@ -14,6 +14,7 @@ from threading import Event, Lock, Thread
 import numpy as np
 
 from stream_buffer import PacketAudioBuffer
+from timeline_audio_buffer import TimelineAudioBuffer
 
 SERVICE_PATH = Path(__file__).with_name("rvc_cpu_service.py")
 
@@ -32,7 +33,9 @@ class RvcProcessStream:
                  startup_packets, max_packets, startup_timeout=600,
                  conversion_timeout=5, pitch=-9, dynamic_block_base=0,
                  synthesis_backend="ort", openvino_packages=None,
-                 worker_priority="normal"):
+                 worker_priority="normal", recover_underflow=False):
+        if type(recover_underflow) is not bool:
+            raise ValueError("Recovery mode must be explicitly boolean")
         if worker_priority not in ("normal", "above_normal"):
             raise ValueError("Unsupported worker scheduling class")
         if worker_priority == "above_normal" and os.name != "nt":
@@ -48,7 +51,8 @@ class RvcProcessStream:
         if (not math.isfinite(startup_timeout) or not math.isfinite(conversion_timeout)
                 or startup_timeout <= 0 or conversion_timeout <= 0):
             raise ValueError("Timeouts must be positive")
-        self.buffer = PacketAudioBuffer(self.frames, 48000,
+        buffer_type = TimelineAudioBuffer if recover_underflow else PacketAudioBuffer
+        self.buffer = buffer_type(self.frames, 48000,
                     startup_packets=startup_packets, max_packets=max_packets)
         self._inputs = Queue(maxsize=max_packets)
         self._messages = Queue(maxsize=4)

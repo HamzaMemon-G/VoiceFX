@@ -26,7 +26,7 @@ class ProcessContracts(unittest.TestCase):
         self.directory.cleanup()
 
     def create(self, mode="normal", capacity=3, conversion_timeout=2, dynamic=0,
-               synthesis_backend="ort", worker_priority="normal"):
+               synthesis_backend="ort", worker_priority="normal", recover=False):
         service = self.root / "fake_service.py"
         service.write_text('''import json,sys,time
 mode=MODE
@@ -48,7 +48,7 @@ for line in sys.stdin:
                 startup_timeout=15, conversion_timeout=conversion_timeout,
                 dynamic_block_base=dynamic, synthesis_backend=synthesis_backend,
                 openvino_packages=self.root if synthesis_backend == "openvino" else None,
-                worker_priority=worker_priority)
+                worker_priority=worker_priority, recover_underflow=recover)
         return self.stream
 
     def wait(self, predicate, timeout=5):
@@ -125,6 +125,21 @@ for line in sys.stdin:
         self.assertLessEqual(stream.status()["queued_input_packets"], 1)
         self.assertEqual(stream.status()["state"], "fault")
         self.assertFalse(stream.read(9600).any())
+
+    def test_explicit_recovery_counts_loss_and_trims_a_late_packet(self):
+        stream = self.create("slow", recover=True)
+        self.wait(lambda: stream.status()["ready"])
+        stream.submit(np.ones(9600))
+        self.wait(lambda: stream.status()["buffered_frames"] == 9600)
+        stream.read(9600)
+        self.assertFalse(stream.read(960).any())
+        packet = np.arange(9600, dtype=np.float32)
+        stream.submit(packet)
+        self.wait(lambda: stream.status()["buffered_frames"] == 8640)
+        np.testing.assert_array_equal(stream.read(8640), packet[960:])
+        self.assertTrue(stream.status()["ready"])
+        self.assertEqual(stream.status()["missing_samples"], 960)
+        self.assertEqual(stream.status()["late_discarded_samples"], 960)
 
     def test_conversion_timeout_and_early_startup_close(self):
         stream = self.create("slow", conversion_timeout=.1)
