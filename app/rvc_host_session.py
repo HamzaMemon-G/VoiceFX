@@ -26,12 +26,13 @@ class RvcHostSession:
             if self._started or self._closed:
                 raise RuntimeError("Session already started or stopped")
             self._started = True
+        stream = None
         try:
             stream = stream_factory()
             bridge = RvcCaptureBridge(stream)
         except Exception:
             self.close()
-            if 'stream' in locals():
+            if stream is not None:
                 stream.close()
             raise
         with self._lock:
@@ -47,14 +48,19 @@ class RvcHostSession:
         bridge = self._bridge
         if self._closed or bridge is None:
             return np.zeros(len(capture), dtype=np.float32)
-        return bridge.process(capture)
+        output = bridge.process(capture)
+        # Stop may arrive while the bounded packetizer is executing.
+        if self._closed:
+            return np.zeros(len(capture), dtype=np.float32)
+        return output
 
     def status(self):
         if self._closed:
             return {"state": "stopped", "ready": False}
-        if self._stream is None:
+        stream = self._stream
+        if stream is None:
             return {"state": "initializing" if self._started else "idle", "ready": False}
-        return self._stream.status()
+        return stream.status()
 
     def close(self):
         with self._lock:

@@ -22,6 +22,27 @@ class OwnedStream(ImmediateStream):
 
 
 class HostContracts(unittest.TestCase):
+    def test_factory_failure_stops_session(self):
+        session = RvcHostSession()
+        def fail():
+            raise RuntimeError("startup failed")
+        with self.assertRaisesRegex(RuntimeError, "startup failed"):
+            session.start(fail)
+        self.assertEqual(session.status()["state"], "stopped")
+        self.assertFalse(session.process(np.ones(4)).any())
+
+    def test_stop_during_callback_suppresses_returned_audio(self):
+        stream = OwnedStream()
+        session = RvcHostSession()
+        session.start(lambda: stream)
+        class ClosingBridge:
+            def process(self, capture):
+                session.close()
+                return np.ones(len(capture))
+        session._bridge = ClosingBridge()
+        self.assertFalse(session.process(np.ones(4)).any())
+        self.assertEqual(stream.close_count, 1)
+
     def test_stop_during_factory_closes_late_worker(self):
         entered, release = Event(), Event()
         stream = OwnedStream()
