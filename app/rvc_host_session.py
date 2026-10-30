@@ -5,6 +5,7 @@ from threading import Lock
 import numpy as np
 
 from rvc_capture_bridge import RvcCaptureBridge
+from monitor import Monitor
 
 
 class RvcHostSession:
@@ -20,6 +21,7 @@ class RvcHostSession:
         self._closed = False
         self._stream = None
         self._bridge = None
+        self.monitor = Monitor()
 
     def start(self, stream_factory):
         with self._lock:
@@ -52,6 +54,7 @@ class RvcHostSession:
         # Stop may arrive while the bounded packetizer is executing.
         if self._closed:
             return np.zeros(len(capture), dtype=np.float32)
+        self.monitor.submit(output)
         return output
 
     def status(self):

@@ -31,3 +31,11 @@ Evidence so far: private waveform parity and two 900-second public callback
 simulation gates passed. Simulated first output is about 540-560 ms; hardware
 latency, arbitrary speech, gaming load and XPS remain unvalidated. Explicitly
 present those limits in the optional session UI and diagnostic report.
+
+Host seam progress: both public fixtures replayed through RvcHostSession with
+exact waveform equality (maxabs 0) and verified worker shutdown. This unpaced
+check covers the new ownership/packetizer seam, not live timing or hardware.
+The optional session now owns an independent Monitor, disabled initially;
+model-free tests verify headphone toggles leave game output identical and do
+not add another inference queue. No devices are opened by this seam. Six host
+lifecycle/monitor tests pass. Main audio application wiring remains pending.

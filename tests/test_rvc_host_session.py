@@ -22,6 +22,20 @@ class OwnedStream(ImmediateStream):
 
 
 class HostContracts(unittest.TestCase):
+    def test_monitor_toggle_cannot_change_game_output(self):
+        stream = OwnedStream()
+        with RvcHostSession() as session:
+            session.start(lambda: stream)
+            for enabled in (False, True, False, True):
+                session.monitor.enabled = enabled
+                capture = np.arange(4, dtype=np.float32)
+                output = session.process(capture)
+                np.testing.assert_array_equal(output, capture)
+                headphones = np.empty((4, 1), dtype=np.float32)
+                session.monitor.callback(headphones, 4, None, None)
+                np.testing.assert_array_equal(headphones[:, 0], capture if enabled else np.zeros(4))
+            self.assertEqual(len(stream.submitted), 4)
+
     def test_factory_failure_stops_session(self):
         session = RvcHostSession()
         def fail():
