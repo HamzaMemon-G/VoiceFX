@@ -10,7 +10,7 @@ import numpy as np
 
 from rvc_cpu_check import load_source
 from rvc_process import RvcProcessStream
-from windows_resource_guard import active_games
+from windows_resource_guard import active_games, GameLoadWatch
 
 
 def checked_path(root, relative):
@@ -40,6 +40,7 @@ def main(argv=None):
     if not isinstance(manifest['cases'],list) or not 1 <= len(manifest['cases']) <= 10:
         raise ValueError('Expected between one and ten public fixture cases')
     results=[]
+    blocked=False
     for entry in manifest['cases']:
         if not isinstance(entry['name'],str) or not re.fullmatch(r'[a-z0-9-]{1,64}',entry['name']):
             raise ValueError('Invalid fixture case name')
@@ -59,6 +60,7 @@ def main(argv=None):
             disable_execution_throttling=args.disable_execution_throttling)
         actual=[]
         row=dict(name=entry['name'],source_sha256=entry['source_sha256'])
+        watch=GameLoadWatch(stream.abort)
         try:
             deadline=time.monotonic()+610
             while not stream.status()['ready']:
@@ -79,6 +81,16 @@ def main(argv=None):
         except Exception as exc:
             row.update(passed=False,error=str(exc))
         finally:
+            try:
+                watch.close()
+                resource=watch.status()
+                row['resource_watch']=resource
+                blocked=resource['blocked']
+            except Exception as exc:
+                blocked=True
+                row['resource_watch_error']=type(exc).__name__
+            if blocked:
+                row['passed']=False
             row['worker_execution_speed']=stream.status().get('worker_execution_speed')
             try:
                 stream.close()
@@ -86,10 +98,12 @@ def main(argv=None):
             except Exception as exc:
                 row.update(passed=False,worker_shutdown_verified=False,shutdown_error=str(exc))
         results.append(row)
+        if blocked:
+            break
     passed=bool(results) and all(row['passed'] and row['worker_shutdown_verified'] for row in results)
-    args.report.write_text(json.dumps(dict(public_waveform_parity_passed=passed,cases=results,
+    args.report.write_text(json.dumps(dict(public_waveform_parity_passed=passed,cases=results,resource_blocked=blocked,
         warning='Unpaced public waveform/transport check only. No CPU live timing, new human sound approval, microphone, routing, gaming or XPS readiness.'),indent=2)+'\n')
-    return 0 if passed else 1
+    return 2 if blocked else (0 if passed else 1)
 
 
 if __name__=='__main__':

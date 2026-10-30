@@ -242,3 +242,9 @@ closes the game. Resource-observation failure also stops the check rather than
 assuming the computer is idle. Such interruptions are labelled
 `resource_blocked` and exit with code 2, rather than being treated as model
 performance evidence. Watcher cleanup cannot bypass worker cleanup.
+
+The unpaced fixture checker also watches startup/conversion for a newly running
+game. It closes its own worker, labels the result resource-blocked and skips
+remaining cases. A resource interruption must not be reported as a numerical
+regression or trigger another model load. The model-free regression reproduces
+a game appearing during startup and verifies cleanup and the skipped next case.
