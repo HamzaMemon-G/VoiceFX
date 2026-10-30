@@ -45,7 +45,7 @@ class RvcHostSession:
         if cancelled:
             stream.close()
 
-    def process(self, capture):
+    def process(self, capture, *, mute=False, volume=1.0):
         # No blocking lifecycle lock, model execution or pipe I/O in callback.
         bridge = self._bridge
         if self._closed or bridge is None:
@@ -54,6 +54,10 @@ class RvcHostSession:
         # Stop may arrive while the bounded packetizer is executing.
         if self._closed:
             return np.zeros(len(capture), dtype=np.float32)
+        if mute:
+            output = np.zeros(len(capture), dtype=np.float32)
+        elif volume != 1.0:
+            output = output * volume
         self.monitor.submit(output)
         return output
 
