@@ -248,3 +248,24 @@ game. It closes its own worker, labels the result resource-blocked and skips
 remaining cases. A resource interruption must not be reported as a numerical
 regression or trigger another model load. The model-free regression reproduces
 a game appearing during startup and verifies cleanup and the skipped next case.
+
+### 30 October: longer default-policy validation
+
+Both public 900-second strict callback simulations passed without underflow,
+with no known games detected. LibriSpeech 1688 model p95 was 140.93 ms;
+VOiCES 0307 was 136.11 ms. Callback p95 was 0.34/0.30 ms. Both workers shut
+ down successfully. These looped public fixtures use the same 200 ms packets,
+400 ms startup and 600 ms maximum queue, OpenVINO synthesis, above-normal
+owned-worker priority and default (false) execution-speed request. They do not
+establish gaming-load reliability. Earlier failures remain part of the record.
+
+The actual CPU-only default-policy worker also matched the private approved
+Recording5 reference within 3.714e-5 maximum waveform error, below the unchanged
+1e-4 gate. No private output was saved, uploaded or used for training.
+
+First converted simulated playout was 540-560 ms after capture began; physical
+microphone/device latency and alignment remain unmeasured. Finite test tails
+were not drained or certified played. These are sustained simulation passes,
+not live hardware or XPS approval. Main-app activation remains disabled.
+The shorter paired policy trial passed in both modes and provides no evidence
+that requesting the execution-speed opt-out helps; its default remains false.
