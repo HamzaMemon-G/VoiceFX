@@ -225,3 +225,13 @@ state after a child-only request and rejection of a missing acknowledgement.
 Opposite-order speaker trials compare requested and default modes with identical
 models, queues, thread counts and existing worker priority. Timing remains
 unapproved; the option is not enabled in the audio app or packaged baseline.
+
+Diagnostic tools now check for known running games before loading a model. A
+blocked check writes `resource_blocked: true`, starts no worker and exits with
+code 2. It never closes a game. The timed CLI records detected games and offers
+an explicit `--allow-game-co-load` option only for an intentional co-load test;
+the fixture and simple portable launcher defer while a game is running. This
+does not certify an idle machine when no known game is found. Model-free
+regressions verify that blocked checks do not read the source or start a worker.
+Previously packaged archives retain their original source and are not silently
+rewritten by these source-only changes.

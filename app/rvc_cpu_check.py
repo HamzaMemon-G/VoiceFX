@@ -11,6 +11,7 @@ import numpy as np
 
 from rvc_capture_bridge import RvcCaptureBridge
 from rvc_process import RvcProcessStream
+from windows_resource_guard import active_games
 
 
 def evaluate(completed, first_play, fault, missing_samples, compute_ms, callback_ms):
@@ -52,6 +53,7 @@ def main(argv=None):
     parser.add_argument('--openvino-packages',type=Path)
     parser.add_argument('--worker-priority',choices=('normal','above_normal'),default='normal')
     parser.add_argument('--disable-execution-throttling',action='store_true')
+    parser.add_argument('--allow-game-co-load',action='store_true',help='Explicitly allow an intentional game/co-load experiment')
     args=parser.parse_args(argv)
     if not 10 <= args.seconds <= 3600:
         parser.error('Check duration must be between 10 and 3600 seconds')
@@ -59,6 +61,12 @@ def main(argv=None):
                                       args.report.with_suffix('.packets.json'))):
         parser.error('Choose a new report filename; existing reports are preserved')
     args.report.parent.mkdir(parents=True,exist_ok=True)
+    games=active_games()
+    if games and not args.allow_game_co_load:
+        args.report.write_text(json.dumps(dict(resource_blocked=True,known_games=games,
+            simulated_cpu_gate_passed=False,worker_started=False,
+            reason='A game is running; no model was loaded. Close it before an idle CPU check.'),indent=2)+'\n')
+        return 2
     audio=load_source(args.source)
     source_sha=hashlib.sha256(args.source.read_bytes()).hexdigest()
     stream=RvcProcessStream(args.python,args.snapshot,args.rvc_root,args.ort_packages,
@@ -81,6 +89,7 @@ def main(argv=None):
         pitch=args.pitch,dynamic_block_base=args.dynamic_block_base,
         synthesis_backend=args.synthesis_backend,worker_priority=args.worker_priority,
         experimental_disable_execution_throttling=args.disable_execution_throttling,
+        known_games_at_start=games,intentional_game_co_load=args.allow_game_co_load,
         warning='No microphone, devices, game load, routing, physical latency or XPS readiness is measured. No source audio is saved. Finite check stops without draining the live queue; tail samples are not certified played.')
     try:
         while not stream.status()['ready']:

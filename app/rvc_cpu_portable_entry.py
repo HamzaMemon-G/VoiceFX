@@ -6,9 +6,13 @@ from pathlib import Path
 import subprocess
 
 from windows_worker_job import WindowsWorkerJob
+from windows_resource_guard import active_games
 
 
 def main():
+    if active_games():
+        print('A game is running. Close it before running the CPU check.',flush=True)
+        return 2
     root=Path(__file__).resolve().parent.parent
     python=root/'runtime/python.exe'
     if not all(path.exists() for path in (python,root/'packages/ort',root/'packages/openvino',

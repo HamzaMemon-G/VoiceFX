@@ -10,6 +10,7 @@ import numpy as np
 
 from rvc_cpu_check import load_source
 from rvc_process import RvcProcessStream
+from windows_resource_guard import active_games
 
 
 def checked_path(root, relative):
@@ -28,6 +29,11 @@ def main(argv=None):
     if args.report.exists():
         parser.error('Choose a new report filename')
     args.report.parent.mkdir(parents=True,exist_ok=True)
+    games=active_games()
+    if games:
+        args.report.write_text(json.dumps(dict(resource_blocked=True,known_games=games,
+            public_waveform_parity_passed=False,worker_started=False,cases=[]),indent=2)+'\n')
+        return 2
     manifest=json.loads((args.fixture/'manifest.json').read_text())
     if manifest['preparation']!='PCM16 mono to48k resample_poly3_1, then zero-pad to9600; no gain/denoise':
         raise ValueError('Unsupported fixture preprocessing')
