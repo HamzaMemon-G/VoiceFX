@@ -162,3 +162,11 @@ requires uninterrupted playback, model p95 at most 160 ms per 200 ms packet and
 callback work within 20 ms. It does not drain the live queue at the end and does
 not claim that queued tail audio played. A simulated pass still requires sound,
 sustained-load, microphone and physical-latency validation on the target machine.
+
+`app/rvc_cpu_fixture_check.py` separately checks numerical portability against a
+checksum-pinned public input and reference array, through the actual child
+process. It restarts the worker for each case to reset caches and random noise.
+It opens no devices and preserves private recordings. Reference parity requires
+maximum complete-waveform difference below `1e-4` and verified worker shutdown;
+it is unpaced and cannot establish CPU throughput or physical latency. Public
+fixtures retain source attribution and are separate from private sound snapshots.
