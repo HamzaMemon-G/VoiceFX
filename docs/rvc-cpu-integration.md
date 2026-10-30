@@ -130,3 +130,15 @@ missing samples before an intentional underflow probe. Public sustained recovery
 diagnostics report sample loss separately from completion. A run with any missing
 samples must not be described as a reliability pass. No microphone, physical
 latency, gaming or XPS validation is implied.
+
+The two recovery trials each reached 600 seconds, but neither passed zero-loss
+reliability. LibriSpeech lost 182,400 samples (3.80 seconds, 0.633% of playback);
+VOiCES lost 167,040 samples (3.48 seconds, 0.580%). The missing portions became
+silence, and equal numbers of late samples were discarded. These losses occurred
+in 190 and 174 callbacks respectively; they are not counts of distinct outages.
+First playback was approximately 340 and 360 ms after the first complete 200 ms
+input packet. That timing excludes the initial capture packet and additional
+model alignment and hardware delay. The results demonstrate bounded recovery,
+not acceptable uninterrupted live speech. Defaults and audio routes remain
+unchanged. Further offline work attributes stalls to individual model stages
+and CPU service before selecting another optimization.
