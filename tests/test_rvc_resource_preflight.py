@@ -5,13 +5,40 @@ import sys
 import tempfile
 import unittest
 from unittest.mock import patch
+from threading import Event
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'app'))
 import rvc_cpu_check
 import rvc_cpu_fixture_check
+from windows_resource_guard import GameLoadWatch
 
 
 class ResourcePreflight(unittest.TestCase):
+    def test_game_start_aborts_only_supplied_workload_and_stops_watch(self):
+        aborted=Event()
+        reasons=[]
+        def abort(reason):
+            reasons.append(reason)
+            aborted.set()
+        with patch('windows_resource_guard.active_games',return_value=[dict(name='Fortnite',pid=1)]):
+            watch=GameLoadWatch(abort)
+            try:
+                self.assertTrue(aborted.wait(1))
+                self.assertTrue(watch.status()['blocked'])
+                self.assertEqual(len(reasons),1)
+            finally:
+                watch.close()
+
+    def test_failed_resource_observation_does_not_assume_idle(self):
+        aborted=Event()
+        with patch('windows_resource_guard.active_games',side_effect=OSError):
+            watch=GameLoadWatch(lambda reason:aborted.set())
+            try:
+                self.assertTrue(aborted.wait(1))
+                self.assertTrue(watch.status()['blocked'])
+            finally:
+                watch.close()
+
     def test_timing_check_blocks_before_loading_source_or_worker(self):
         with tempfile.TemporaryDirectory() as folder:
             report=Path(folder)/'check.json'

@@ -3,6 +3,7 @@ import ctypes
 from ctypes import wintypes
 import json
 import os
+from threading import Event, Lock, Thread
 
 
 def is_game(name):
@@ -42,6 +43,45 @@ def active_games():
     finally:
         kernel.CloseHandle(snapshot)
     return found
+
+
+class GameLoadWatch:
+    """Abort only the supplied owned workload if a game starts after preflight."""
+    def __init__(self,abort,interval=1.):
+        self._abort=abort
+        self._interval=interval
+        self._stop=Event()
+        self._lock=Lock()
+        self._games=[]
+        self._error=None
+        self._thread=Thread(target=self._run,daemon=True,name='voicefx-resource-watch')
+        self._thread.start()
+
+    def _run(self):
+        while not self._stop.is_set():
+            try:
+                games=active_games()
+            except Exception as exc:
+                with self._lock:
+                    self._error=type(exc).__name__
+                self._abort('CPU check stopped: resource availability could not be verified')
+                return
+            if games:
+                with self._lock:
+                    self._games=games
+                self._abort('CPU check stopped because a game started')
+                return
+            self._stop.wait(self._interval)
+
+    def status(self):
+        with self._lock:
+            return dict(blocked=bool(self._games or self._error),games=list(self._games),error=self._error)
+
+    def close(self):
+        self._stop.set()
+        self._thread.join(timeout=2)
+        if self._thread.is_alive():
+            raise RuntimeError('Resource watcher did not stop')
 
 
 if __name__=='__main__':

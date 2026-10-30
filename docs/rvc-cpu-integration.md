@@ -235,3 +235,10 @@ does not certify an idle machine when no known game is found. Model-free
 regressions verify that blocked checks do not read the source or start a worker.
 Previously packaged archives retain their original source and are not silently
 rewritten by these source-only changes.
+
+Timed checks also watch for a game starting after preflight, including during
+model initialization. The watcher aborts only the check's own stream; it never
+closes the game. Resource-observation failure also stops the check rather than
+assuming the computer is idle. Such interruptions are labelled
+`resource_blocked` and exit with code 2, rather than being treated as model
+performance evidence. Watcher cleanup cannot bypass worker cleanup.

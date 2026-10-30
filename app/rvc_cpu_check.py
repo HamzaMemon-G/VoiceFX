@@ -11,7 +11,7 @@ import numpy as np
 
 from rvc_capture_bridge import RvcCaptureBridge
 from rvc_process import RvcProcessStream
-from windows_resource_guard import active_games
+from windows_resource_guard import active_games, GameLoadWatch
 
 
 def evaluate(completed, first_play, fault, missing_samples, compute_ms, callback_ms):
@@ -83,6 +83,7 @@ def main(argv=None):
     capture=0
     sequence=-1
     bridge=RvcCaptureBridge(stream)
+    watch=None if args.allow_game_co_load else GameLoadWatch(stream.abort)
     report=dict(scope='File-driven real-worker CPU check, simulated callbacks only',
         source_sha256=source_sha,source_looped=True,requested_seconds=args.seconds,
         processing_packet_ms=200,callback_ms=20,startup_queue_ms=400,max_queue_ms=600,
@@ -144,6 +145,15 @@ def main(argv=None):
     except Exception as exc:
         report.update(error=str(exc),simulated_cpu_gate_passed=False)
     finally:
+        if watch is not None:
+            try:
+                watch.close()
+                resource=watch.status()
+                report.update(resource_blocked=resource['blocked'],resource_watch=resource)
+            except Exception as exc:
+                report.update(resource_blocked=True,resource_watch_error=type(exc).__name__)
+            if report.get('resource_blocked'):
+                report['simulated_cpu_gate_passed']=False
         report['worker_execution_speed']=stream.status().get('worker_execution_speed')
         try:
             stream.close()
@@ -153,7 +163,7 @@ def main(argv=None):
                           simulated_cpu_gate_passed=False)
         args.report.write_text(json.dumps(report,indent=2)+'\n')
         args.report.with_suffix('.packets.json').write_text(json.dumps(timings,indent=2)+'\n')
-    return 0 if report.get('simulated_cpu_gate_passed') else 1
+    return 2 if report.get('resource_blocked') else (0 if report.get('simulated_cpu_gate_passed') else 1)
 
 
 if __name__=='__main__':
