@@ -185,3 +185,13 @@ cleanup checks reader termination rather than blocking on its text-pipe lock.
 Only this worker tree is affected. Regressions cover a descendant holding stdout
 and shutdown during an in-flight conversion. This fixes a lifecycle failure
 path; it does not reduce model computation or establish uninterrupted playback.
+
+The optional local diagnostic bundle can include its own CPU-only interpreter,
+dependencies and attributed public fixtures. `app/rvc_cpu_portable_entry.py`
+runs the reference check before either timing sample, owns its checker processes
+in Windows jobs, and writes results in a new timestamped folder. It never selects
+the live backend or opens audio devices. Its launcher clears inherited Python
+paths and disables user-site packages; bundle validation must prove the relocated
+interpreter and Torch library load from that folder. Packaging success and
+public reference parity remain separate from the timed CPU gates and target
+hardware validation. The bundle and model payload remain local.
