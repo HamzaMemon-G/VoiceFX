@@ -13,6 +13,8 @@ def main():
     parser.add_argument("--rvc-root", required=True)
     parser.add_argument("--ort-packages", required=True)
     parser.add_argument("--dynamic-block-base", type=int, choices=(0, 4), default=0)
+    parser.add_argument("--synthesis-backend", choices=("ort", "openvino"), default="ort")
+    parser.add_argument("--openvino-packages")
     args = parser.parse_args()
     protocol = sys.stdout
 
@@ -26,10 +28,13 @@ def main():
             from rvc_cpu_worker import FrozenRvcCpu
             import numpy as np
             with FrozenRvcCpu(args.snapshot, args.rvc_root, args.ort_packages,
-                             dynamic_block_base=args.dynamic_block_base) as converter:
+                             dynamic_block_base=args.dynamic_block_base,
+                             synthesis_backend=args.synthesis_backend,
+                             openvino_packages=args.openvino_packages) as converter:
                 converter.warmup()
                 send(dict(type="ready", frames=converter.frames, sample_rate=48000,
-                          dynamic_block_base=args.dynamic_block_base))
+                          dynamic_block_base=args.dynamic_block_base,
+                          synthesis_backend=args.synthesis_backend))
                 sequence = 0
                 while True:
                     line = sys.stdin.readline(65537)

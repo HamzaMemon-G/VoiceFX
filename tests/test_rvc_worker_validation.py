@@ -13,6 +13,11 @@ from rvc_cpu_worker import FrozenRvcCpu
 
 
 class WorkerValidation(unittest.TestCase):
+    def test_backend_configuration_rejected_before_runtime_load(self):
+        for options in ({"synthesis_backend": "gpu"}, {"synthesis_backend": "openvino"}):
+            with self.subTest(options=options), self.assertRaises(ValueError):
+                FrozenRvcCpu("unused", "unused", "unused", **options)
+
     def test_unsupported_scheduling_rejected_before_runtime_load(self):
         with self.assertRaises(ValueError):
             FrozenRvcCpu("unused", "unused", "unused", dynamic_block_base=-1)

@@ -81,3 +81,15 @@ Follow-up reliability checks on two held-out public speakers underflowed after
 approximately 51 and 116 seconds. Neither completed its planned ten minutes.
 Consequently the earlier 320-second pass does not establish general reliability;
 the experimental backend remains unsuitable for an approved live release.
+
+An additional explicit `synthesis_backend="openvino"` experiment keeps the exact
+approved TorchScript feature path and pitch processing. It compiles only the
+checksum-verified synthesis graph for CPU, forcing FP32 accuracy mode and
+disabling dynamic quantization. An isolated OpenVINO package path is required;
+the default remains `"ort"`. The child must acknowledge the requested backend.
+Public complete-waveform tests with matched synthesis noise passed on three
+clips, with maximum error below `1e-5`. Private process parity and sustained
+callback tests are pending; this is not an enabled or approved live mode.
+
+The separate OpenVINO *feature* experiment failed the full-waveform accuracy gate
+on one held-out clip and is rejected. It is not used by this synthesis option.

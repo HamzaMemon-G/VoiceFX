@@ -24,13 +24,15 @@ class ProcessContracts(unittest.TestCase):
             self.stream.close()
         self.directory.cleanup()
 
-    def create(self, mode="normal", capacity=3, conversion_timeout=2, dynamic=0):
+    def create(self, mode="normal", capacity=3, conversion_timeout=2, dynamic=0,
+               synthesis_backend="ort"):
         service = self.root / "fake_service.py"
         service.write_text('''import json,sys,time
 mode=MODE
 dynamic=int(sys.argv[sys.argv.index('--dynamic-block-base')+1])
+backend=sys.argv[sys.argv.index('--synthesis-backend')+1]
 time.sleep(10 if mode=='slow_start' else .1)
-print(json.dumps(dict(type='ready',frames=9600,sample_rate=48000,dynamic_block_base=0 if mode=='bad_schedule' else dynamic)),flush=True)
+print(json.dumps(dict(type='ready',frames=9600,sample_rate=48000,dynamic_block_base=0 if mode=='bad_schedule' else dynamic,synthesis_backend='ort' if mode=='bad_backend' else backend)),flush=True)
 for line in sys.stdin:
  m=json.loads(line)
  if m['type']=='stop':break
@@ -42,7 +44,8 @@ for line in sys.stdin:
             self.stream = RvcProcessStream(sys.executable, "unused", "unused", "unused",
                 self.root / "worker.log", startup_packets=1, max_packets=capacity,
                 startup_timeout=15, conversion_timeout=conversion_timeout,
-                dynamic_block_base=dynamic)
+                dynamic_block_base=dynamic, synthesis_backend=synthesis_backend,
+                openvino_packages=self.root if synthesis_backend == "openvino" else None)
         return self.stream
 
     def wait(self, predicate, timeout=5):
@@ -85,6 +88,15 @@ for line in sys.stdin:
         self.assertEqual(stream.status()["experimental_dynamic_block_base"], 4)
         stream.close()
         stream = self.create("bad_schedule", dynamic=4)
+        self.wait(lambda: stream.status()["state"] == "fault")
+        self.assertFalse(stream.status()["ready"])
+
+    def test_synthesis_backend_requires_matching_acknowledgement(self):
+        stream = self.create(synthesis_backend="openvino")
+        self.wait(lambda: stream.status()["ready"])
+        self.assertEqual(stream.status()["experimental_synthesis_backend"], "openvino")
+        stream.close()
+        stream = self.create("bad_backend", synthesis_backend="openvino")
         self.wait(lambda: stream.status()["state"] == "fault")
         self.assertFalse(stream.status()["ready"])
 

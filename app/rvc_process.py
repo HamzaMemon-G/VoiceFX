@@ -29,7 +29,12 @@ class RvcProcessStream:
 
     def __init__(self, python, snapshot, rvc_root, ort_packages, log_file, *,
                  startup_packets, max_packets, startup_timeout=600,
-                 conversion_timeout=5, pitch=-9, dynamic_block_base=0):
+                 conversion_timeout=5, pitch=-9, dynamic_block_base=0,
+                 synthesis_backend="ort", openvino_packages=None):
+        if synthesis_backend not in ("ort", "openvino"):
+            raise ValueError("Unsupported CPU synthesis backend")
+        if synthesis_backend == "openvino" and not openvino_packages:
+            raise ValueError("Explicit isolated OpenVINO package path required")
         if type(dynamic_block_base) is not int or dynamic_block_base not in (0, 4):
             raise ValueError("Unsupported experimental scheduling option")
         if not math.isfinite(pitch) or not -24 <= pitch <= 24:
@@ -50,10 +55,14 @@ class RvcProcessStream:
         self._process = None
         self._pitch = pitch
         self._dynamic_block_base = dynamic_block_base
+        self._synthesis_backend = synthesis_backend
         self._last_compute_ms = None
         command = [str(python), "-u", str(SERVICE_PATH), "--snapshot", str(snapshot),
                    "--rvc-root", str(rvc_root), "--ort-packages", str(ort_packages),
-                   "--dynamic-block-base", str(dynamic_block_base)]
+                   "--dynamic-block-base", str(dynamic_block_base),
+                   "--synthesis-backend", synthesis_backend]
+        if synthesis_backend == "openvino":
+            command.extend(["--openvino-packages", str(openvino_packages)])
         self._thread = Thread(target=self._run,
             args=(command, Path(log_file), startup_timeout, conversion_timeout),
             daemon=True, name="voicefx-transport")
@@ -104,6 +113,7 @@ class RvcProcessStream:
                 message = self._receive(startup_timeout)
                 if (message.get("type") != "ready" or message.get("frames") != self.frames
                         or message.get("sample_rate") != 48000
+                        or message.get("synthesis_backend", "ort") != self._synthesis_backend
                         or message.get("dynamic_block_base", 0) != self._dynamic_block_base):
                     raise RuntimeError("CPU worker format mismatch")
                 if not self._stop.is_set():
@@ -188,6 +198,7 @@ class RvcProcessStream:
                     queued_input_packets=self._inputs.qsize(),
                     worker_pid=self._process.pid if self._process else None,
                     experimental_dynamic_block_base=self._dynamic_block_base,
+                    experimental_synthesis_backend=self._synthesis_backend,
                     last_compute_ms=self._last_compute_ms)
 
     def metrics(self):

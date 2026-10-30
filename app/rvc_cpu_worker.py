@@ -25,7 +25,12 @@ class FrozenRvcCpu:
     frames = 9600
     ms = 200
 
-    def __init__(self, snapshot, rvc_root, ort_packages, *, dynamic_block_base=0):
+    def __init__(self, snapshot, rvc_root, ort_packages, *, dynamic_block_base=0,
+                 synthesis_backend="ort", openvino_packages=None):
+        if synthesis_backend not in ("ort", "openvino"):
+            raise ValueError("Unsupported CPU synthesis backend")
+        if synthesis_backend == "openvino" and not openvino_packages:
+            raise ValueError("Explicit isolated OpenVINO package path required")
         if type(dynamic_block_base) is not int or dynamic_block_base not in (0, 4):
             raise ValueError("Unsupported experimental scheduling option")
         if "torch" in sys.modules:
@@ -108,11 +113,37 @@ class FrozenRvcCpu:
                     raise RuntimeError("Unexpected pitch input shape")
                 return torch.from_numpy(pitch_session.run(None, {"mel": mel.numpy()})[0])
 
+        class OpenVinoSynthesisSession:
+            def __init__(self):
+                sys.path.insert(0, str(Path(openvino_packages).resolve()))
+                import openvino as ov
+                core = ov.Core()
+                config = dict(INFERENCE_PRECISION_HINT="f32", EXECUTION_MODE_HINT="ACCURACY",
+                    PERFORMANCE_HINT="LATENCY", INFERENCE_NUM_THREADS=6, NUM_STREAMS=1,
+                    ENABLE_CPU_PINNING=False, DYNAMIC_QUANTIZATION_GROUP_SIZE=0)
+                self.compiled = core.compile_model(
+                    core.read_model(str(snapshot / "runtime/synth.onnx")), "CPU", config)
+                if (self.compiled.get_property("INFERENCE_PRECISION_HINT") != ov.Type.f32
+                        or self.compiled.get_property("DYNAMIC_QUANTIZATION_GROUP_SIZE") != 0
+                        or not all(str(d).startswith("CPU") for d in self.compiled.get_property("EXECUTION_DEVICES"))):
+                    raise RuntimeError("Unexpected synthesis precision or execution device")
+                self.request = self.compiled.create_infer_request()
+                self.output = self.compiled.output(0)
+                self.names = [value.get_any_name() for value in self.compiled.inputs]
+
+            def get_inputs(self):
+                return [SimpleNamespace(name=value.get_any_name(), shape=list(value.get_shape()))
+                        for value in self.compiled.inputs]
+
+            def run(self, unused, feed):
+                return [self.request.infer({name: feed[name] for name in self.names})[self.output].copy()]
+
         class Synth(torch.nn.Module):
             def __init__(self):
                 super().__init__()
                 self.source = excitation
-                self.session = session(snapshot / "runtime/synth.onnx", 6)
+                self.session = (session(snapshot / "runtime/synth.onnx", 6)
+                    if synthesis_backend == "ort" else OpenVinoSynthesisSession())
                 self.noise_shape = next(x.shape for x in self.session.get_inputs() if x.name == "noise")
 
             def infer(self, phone, lengths, pitch, pitchf, speaker, *static):
