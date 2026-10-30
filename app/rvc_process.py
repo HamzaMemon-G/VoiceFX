@@ -33,7 +33,12 @@ class RvcProcessStream:
                  startup_packets, max_packets, startup_timeout=600,
                  conversion_timeout=5, pitch=-9, dynamic_block_base=0,
                  synthesis_backend="ort", openvino_packages=None,
-                 worker_priority="normal", recover_underflow=False):
+                 worker_priority="normal", recover_underflow=False,
+                 disable_execution_throttling=False):
+        if type(disable_execution_throttling) is not bool:
+            raise ValueError('Execution-speed request must be explicitly boolean')
+        if disable_execution_throttling and os.name!='nt':
+            raise ValueError('Execution-speed request requires Windows')
         if type(recover_underflow) is not bool:
             raise ValueError("Recovery mode must be explicitly boolean")
         if worker_priority not in ("normal", "above_normal"):
@@ -65,6 +70,8 @@ class RvcProcessStream:
         self._process = None
         self._job = None
         self._reader_thread = None
+        self._disable_execution_throttling=disable_execution_throttling
+        self._execution_speed=None
         self._pitch = pitch
         self._dynamic_block_base = dynamic_block_base
         self._synthesis_backend = synthesis_backend
@@ -77,6 +84,8 @@ class RvcProcessStream:
                    "--synthesis-backend", synthesis_backend]
         if synthesis_backend == "openvino":
             command.extend(["--openvino-packages", str(openvino_packages)])
+        if disable_execution_throttling:
+            command.append('--disable-execution-throttling')
         self._thread = Thread(target=self._run,
             args=(command, Path(log_file), startup_timeout, conversion_timeout),
             daemon=True, name="voicefx-transport")
@@ -160,6 +169,17 @@ class RvcProcessStream:
                         or message.get("synthesis_backend", "ort") != self._synthesis_backend
                         or message.get("dynamic_block_base", 0) != self._dynamic_block_base):
                     raise RuntimeError("CPU worker format mismatch")
+                if self._disable_execution_throttling:
+                    qos=message.get('execution_speed')
+                    if (not isinstance(qos,dict) or qos.get('requested') is not True
+                            or qos.get('applied') is not True
+                            or type(qos.get('control_mask')) is not int
+                            or type(qos.get('state_mask')) is not int
+                            or qos['control_mask']<0 or qos['state_mask']<0
+                            or not qos['control_mask']&1 or qos['state_mask']&1
+                            or type(qos.get('pid')) is not int or qos['pid']<=0):
+                        raise RuntimeError('Actual CPU worker execution-speed request was not acknowledged')
+                    self._execution_speed=qos
                 if not self._stop.is_set():
                     self._ready.set()
                 while not self._stop.is_set():
@@ -254,6 +274,8 @@ class RvcProcessStream:
                     experimental_synthesis_backend=self._synthesis_backend,
                     experimental_worker_priority=self._worker_priority,
                     verified_priority_class=self._verified_priority_class,
+                    experimental_disable_execution_throttling=self._disable_execution_throttling,
+                    worker_execution_speed=self._execution_speed,
                     last_compute_ms=self._last_compute_ms)
 
     def metrics(self):

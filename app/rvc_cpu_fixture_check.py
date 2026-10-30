@@ -23,6 +23,7 @@ def main(argv=None):
     parser=argparse.ArgumentParser(description=__doc__)
     for name in ('python','fixture','snapshot','rvc-root','ort-packages','report'):
         parser.add_argument('--'+name,type=Path,required=True)
+    parser.add_argument('--disable-execution-throttling',action='store_true')
     args=parser.parse_args(argv)
     if args.report.exists():
         parser.error('Choose a new report filename')
@@ -48,7 +49,8 @@ def main(argv=None):
             raise ValueError('Invalid fixture reference shape or dtype')
         stream=RvcProcessStream(args.python,args.snapshot,args.rvc_root,args.ort_packages,
             args.report.with_name(args.report.stem+'-'+entry['name']+'.worker.log'),
-            startup_packets=1,max_packets=3,pitch=entry['pitch'])
+            startup_packets=1,max_packets=3,pitch=entry['pitch'],
+            disable_execution_throttling=args.disable_execution_throttling)
         actual=[]
         row=dict(name=entry['name'],source_sha256=entry['source_sha256'])
         try:
@@ -71,6 +73,7 @@ def main(argv=None):
         except Exception as exc:
             row.update(passed=False,error=str(exc))
         finally:
+            row['worker_execution_speed']=stream.status().get('worker_execution_speed')
             try:
                 stream.close()
                 row['worker_shutdown_verified']=not stream._thread.is_alive()

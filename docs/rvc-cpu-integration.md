@@ -195,3 +195,33 @@ paths and disables user-site packages; bundle validation must prove the relocate
 interpreter and Torch library load from that folder. Packaging success and
 public reference parity remain separate from the timed CPU gates and target
 hardware validation. The bundle and model payload remain local.
+
+The completed local bundle passed relocated-interpreter and public waveform
+checks, its user entry point, worker cleanup, archive SHA and archive CRC checks.
+Its timed desktop samples still underflowed after about 244 and 286 seconds;
+packaging success therefore does not make it a usable live release.
+
+The routine-log IO hypothesis was rejected. Upstream inference already limits
+its status messages to the first three calls and every hundredth call. The
+paired test retained identical waveforms but observed only four write calls
+and 109 bytes in the verbose intervals. Its small timing difference does not
+establish useful headroom, and no logging suppression was adopted.
+
+A separate experimental `disable_execution_throttling=True` option tests a
+specific host/service boundary: the existing audio host requests execution-speed
+throttling be disabled for its own process, while a separate inference service
+must make its own request explicitly rather than assume the launcher's state.
+The default remains `False`. The service applies and reads back the hint in its
+actual Python worker, acknowledges its PID and masks during startup, and the
+controller rejects an unacknowledged request. Only the execution-speed bit of
+that owned process is changed; other bits are preserved. No global power plan,
+registry, security setting or other process is changed, and the request ends
+with the worker. An initial zero mask means system-managed policy, not evidence
+that the worker was being throttled. Readback is not a measured clock speed.
+
+The requested mode passed both complete public fixture waveforms exactly and
+verified shutdown. Thirty-five contract tests pass, including unchanged parent
+state after a child-only request and rejection of a missing acknowledgement.
+Opposite-order speaker trials compare requested and default modes with identical
+models, queues, thread counts and existing worker priority. Timing remains
+unapproved; the option is not enabled in the audio app or packaged baseline.

@@ -15,6 +15,7 @@ def main():
     parser.add_argument("--dynamic-block-base", type=int, choices=(0, 4), default=0)
     parser.add_argument("--synthesis-backend", choices=("ort", "openvino"), default="ort")
     parser.add_argument("--openvino-packages")
+    parser.add_argument('--disable-execution-throttling',action='store_true')
     args = parser.parse_args()
     protocol = sys.stdout
 
@@ -25,6 +26,10 @@ def main():
     try:
         # RVC diagnostics belong on stderr, never in the packet protocol.
         with redirect_stdout(sys.stderr):
+            qos=None
+            if args.disable_execution_throttling:
+                from windows_worker_qos import execution_speed_state
+                qos=execution_speed_state(True)
             from rvc_cpu_worker import FrozenRvcCpu
             import numpy as np
             with FrozenRvcCpu(args.snapshot, args.rvc_root, args.ort_packages,
@@ -34,6 +39,7 @@ def main():
                 converter.warmup()
                 send(dict(type="ready", frames=converter.frames, sample_rate=48000,
                           dynamic_block_base=args.dynamic_block_base,
+                          execution_speed=qos,
                           synthesis_backend=args.synthesis_backend))
                 sequence = 0
                 while True:

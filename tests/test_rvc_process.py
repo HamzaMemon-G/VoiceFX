@@ -26,9 +26,9 @@ class ProcessContracts(unittest.TestCase):
         self.directory.cleanup()
 
     def create(self, mode="normal", capacity=3, conversion_timeout=2, dynamic=0,
-               synthesis_backend="ort", worker_priority="normal", recover=False):
+               synthesis_backend="ort", worker_priority="normal", recover=False, execution_speed=False):
         service = self.root / "fake_service.py"
-        service.write_text('''import json,sys,time,subprocess
+        service.write_text('''import json,sys,time,subprocess,os
 from pathlib import Path
 mode=MODE
 dynamic=int(sys.argv[sys.argv.index('--dynamic-block-base')+1])
@@ -37,7 +37,9 @@ time.sleep(10 if mode=='slow_start' else .1)
 if mode=='descendant_holds_pipe':
  child=subprocess.Popen([sys.executable,'-c','import time;time.sleep(60)'],stdout=sys.stdout,stderr=sys.stderr,creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
  Path(sys.argv[0]).with_suffix('.childpid').write_text(str(child.pid))
-print(json.dumps(dict(type='ready',frames=9600,sample_rate=48000,dynamic_block_base=0 if mode=='bad_schedule' else dynamic,synthesis_backend='ort' if mode=='bad_backend' else backend)),flush=True)
+power='--disable-execution-throttling' in sys.argv
+qos=dict(requested=power,applied=power and mode!='bad_qos',control_mask=1 if mode!='bad_qos' else 0,state_mask=0,pid=os.getpid()) if power else None
+print(json.dumps(dict(type='ready',frames=9600,sample_rate=48000,dynamic_block_base=0 if mode=='bad_schedule' else dynamic,synthesis_backend='ort' if mode=='bad_backend' else backend,execution_speed=qos)),flush=True)
 if mode=='exit_idle':raise SystemExit(0)
 for line in sys.stdin:
  m=json.loads(line)
@@ -53,7 +55,8 @@ for line in sys.stdin:
                 startup_timeout=15, conversion_timeout=conversion_timeout,
                 dynamic_block_base=dynamic, synthesis_backend=synthesis_backend,
                 openvino_packages=self.root if synthesis_backend == "openvino" else None,
-                worker_priority=worker_priority, recover_underflow=recover)
+                worker_priority=worker_priority, recover_underflow=recover,
+                disable_execution_throttling=execution_speed)
         return self.stream
 
     def wait(self, predicate, timeout=5):
@@ -113,6 +116,16 @@ for line in sys.stdin:
         stream = self.create("bad_backend", synthesis_backend="openvino")
         self.wait(lambda: stream.status()["state"] == "fault")
         self.assertFalse(stream.status()["ready"])
+
+    @unittest.skipUnless(os.name=='nt','Windows-only execution-speed request')
+    def test_actual_worker_execution_speed_requires_matching_acknowledgement(self):
+        stream=self.create(execution_speed=True)
+        self.wait(lambda:stream.status()['ready'])
+        self.assertTrue(stream.status()['worker_execution_speed']['applied'])
+        stream.close()
+        stream=self.create('bad_qos',execution_speed=True)
+        self.wait(lambda:stream.status()['state']=='fault')
+        self.assertFalse(stream.status()['ready'])
 
     @unittest.skipUnless(os.name == "nt", "Windows-only scoped scheduling")
     def test_scoped_priority_applies_only_to_created_worker_and_exits(self):

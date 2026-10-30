@@ -51,6 +51,7 @@ def main(argv=None):
     parser.add_argument('--synthesis-backend',choices=('ort','openvino'),default='ort')
     parser.add_argument('--openvino-packages',type=Path)
     parser.add_argument('--worker-priority',choices=('normal','above_normal'),default='normal')
+    parser.add_argument('--disable-execution-throttling',action='store_true')
     args=parser.parse_args(argv)
     if not 10 <= args.seconds <= 3600:
         parser.error('Check duration must be between 10 and 3600 seconds')
@@ -64,7 +65,7 @@ def main(argv=None):
         args.report.with_suffix('.worker.log'),startup_packets=2,max_packets=3,
         pitch=args.pitch,dynamic_block_base=args.dynamic_block_base,
         synthesis_backend=args.synthesis_backend,openvino_packages=args.openvino_packages,
-        worker_priority=args.worker_priority)
+        worker_priority=args.worker_priority,disable_execution_throttling=args.disable_execution_throttling)
     timings=[]
     callbacks=[]
     lateness=[]
@@ -79,6 +80,7 @@ def main(argv=None):
         processing_packet_ms=200,callback_ms=20,startup_queue_ms=400,max_queue_ms=600,
         pitch=args.pitch,dynamic_block_base=args.dynamic_block_base,
         synthesis_backend=args.synthesis_backend,worker_priority=args.worker_priority,
+        experimental_disable_execution_throttling=args.disable_execution_throttling,
         warning='No microphone, devices, game load, routing, physical latency or XPS readiness is measured. No source audio is saved. Finite check stops without draining the live queue; tail samples are not certified played.')
     try:
         while not stream.status()['ready']:
@@ -133,6 +135,7 @@ def main(argv=None):
     except Exception as exc:
         report.update(error=str(exc),simulated_cpu_gate_passed=False)
     finally:
+        report['worker_execution_speed']=stream.status().get('worker_execution_speed')
         try:
             stream.close()
             report['worker_shutdown_verified']=not stream._thread.is_alive()
