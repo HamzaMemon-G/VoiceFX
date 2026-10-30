@@ -93,3 +93,18 @@ callback tests are pending; this is not an enabled or approved live mode.
 
 The separate OpenVINO *feature* experiment failed the full-waveform accuracy gate
 on one held-out clip and is rejected. It is not used by this synthesis option.
+
+Follow-up synthesis-only testing passed private Recording5 process parity. One
+held-out speaker completed 600 seconds of simulated playback; the other still
+underflowed after about 72 seconds. The improvement does not yet establish
+general reliability. A targeted follow-up combines this faster synthesis path
+with an explicit `worker_priority="above_normal"` trial. This option changes only
+the newly created Windows worker's scheduling class, verifies it with Windows,
+and ends with that process. The default remains `"normal"`; other processes and
+system settings are not changed. It is not a production default or gaming test.
+
+`app/rvc_capture_bridge.py` assembles nondividing mono capture callback sizes into
+complete model packets and reads corresponding output without model or pipe I/O
+in the callback. It discards pre-ready capture, rejects invalid channels/samples,
+and performs no gain, character processing, device selection or routing. It is
+offline-tested and is not wired to the application's audio host yet.

@@ -2,6 +2,7 @@
 
 from pathlib import Path
 import sys
+import os
 import tempfile
 import time
 import unittest
@@ -25,7 +26,7 @@ class ProcessContracts(unittest.TestCase):
         self.directory.cleanup()
 
     def create(self, mode="normal", capacity=3, conversion_timeout=2, dynamic=0,
-               synthesis_backend="ort"):
+               synthesis_backend="ort", worker_priority="normal"):
         service = self.root / "fake_service.py"
         service.write_text('''import json,sys,time
 mode=MODE
@@ -33,6 +34,7 @@ dynamic=int(sys.argv[sys.argv.index('--dynamic-block-base')+1])
 backend=sys.argv[sys.argv.index('--synthesis-backend')+1]
 time.sleep(10 if mode=='slow_start' else .1)
 print(json.dumps(dict(type='ready',frames=9600,sample_rate=48000,dynamic_block_base=0 if mode=='bad_schedule' else dynamic,synthesis_backend='ort' if mode=='bad_backend' else backend)),flush=True)
+if mode=='exit_idle':raise SystemExit(0)
 for line in sys.stdin:
  m=json.loads(line)
  if m['type']=='stop':break
@@ -45,7 +47,8 @@ for line in sys.stdin:
                 self.root / "worker.log", startup_packets=1, max_packets=capacity,
                 startup_timeout=15, conversion_timeout=conversion_timeout,
                 dynamic_block_base=dynamic, synthesis_backend=synthesis_backend,
-                openvino_packages=self.root if synthesis_backend == "openvino" else None)
+                openvino_packages=self.root if synthesis_backend == "openvino" else None,
+                worker_priority=worker_priority)
         return self.stream
 
     def wait(self, predicate, timeout=5):
@@ -82,6 +85,12 @@ for line in sys.stdin:
         self.assertFalse(stream.read(9600).any())
         self.assertFalse(stream.submit(np.ones(9600)))
 
+    def test_idle_worker_exit_clears_readiness_without_new_capture(self):
+        stream = self.create("exit_idle")
+        self.wait(lambda: stream.status()["state"] == "fault")
+        self.assertFalse(stream.status()["ready"])
+        self.assertFalse(stream.read(9600).any())
+
     def test_experimental_scheduling_requires_matching_acknowledgement(self):
         stream = self.create(dynamic=4)
         self.wait(lambda: stream.status()["ready"])
@@ -99,6 +108,14 @@ for line in sys.stdin:
         stream = self.create("bad_backend", synthesis_backend="openvino")
         self.wait(lambda: stream.status()["state"] == "fault")
         self.assertFalse(stream.status()["ready"])
+
+    @unittest.skipUnless(os.name == "nt", "Windows-only scoped scheduling")
+    def test_scoped_priority_applies_only_to_created_worker_and_exits(self):
+        stream = self.create(worker_priority="above_normal")
+        self.wait(lambda: stream.status()["ready"])
+        self.assertEqual(stream.status()["verified_priority_class"], 0x8000)
+        stream.close()
+        self.assertIsNotNone(stream._process.poll())
 
     def test_slow_worker_has_bounded_input_and_output(self):
         stream = self.create("slow", capacity=1)

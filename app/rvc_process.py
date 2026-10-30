@@ -4,6 +4,7 @@ import base64
 from collections import deque
 import json
 import math
+import os
 from pathlib import Path
 from queue import Empty, Full, Queue
 import subprocess
@@ -30,7 +31,12 @@ class RvcProcessStream:
     def __init__(self, python, snapshot, rvc_root, ort_packages, log_file, *,
                  startup_packets, max_packets, startup_timeout=600,
                  conversion_timeout=5, pitch=-9, dynamic_block_base=0,
-                 synthesis_backend="ort", openvino_packages=None):
+                 synthesis_backend="ort", openvino_packages=None,
+                 worker_priority="normal"):
+        if worker_priority not in ("normal", "above_normal"):
+            raise ValueError("Unsupported worker scheduling class")
+        if worker_priority == "above_normal" and os.name != "nt":
+            raise ValueError("Experimental worker scheduling requires Windows")
         if synthesis_backend not in ("ort", "openvino"):
             raise ValueError("Unsupported CPU synthesis backend")
         if synthesis_backend == "openvino" and not openvino_packages:
@@ -56,6 +62,8 @@ class RvcProcessStream:
         self._pitch = pitch
         self._dynamic_block_base = dynamic_block_base
         self._synthesis_backend = synthesis_backend
+        self._worker_priority = worker_priority
+        self._verified_priority_class = None
         self._last_compute_ms = None
         command = [str(python), "-u", str(SERVICE_PATH), "--snapshot", str(snapshot),
                    "--rvc-root", str(rvc_root), "--ort-packages", str(ort_packages),
@@ -104,10 +112,22 @@ class RvcProcessStream:
             with log_file.open("w", encoding="utf8") as log:
                 if self._stop.is_set():
                     return
+                flags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+                if self._worker_priority == "above_normal":
+                    flags |= subprocess.ABOVE_NORMAL_PRIORITY_CLASS
                 process = subprocess.Popen(command, stdin=subprocess.PIPE,
                     stdout=subprocess.PIPE, stderr=log, text=True, encoding="utf8",
-                    bufsize=1, creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
+                    bufsize=1, creationflags=flags)
                 self._process = process
+                if self._worker_priority == "above_normal":
+                    import ctypes
+                    from ctypes import wintypes
+                    kernel = ctypes.WinDLL("kernel32", use_last_error=True)
+                    kernel.GetPriorityClass.argtypes = [wintypes.HANDLE]
+                    kernel.GetPriorityClass.restype = wintypes.DWORD
+                    self._verified_priority_class = int(kernel.GetPriorityClass(int(process._handle)))
+                    if self._verified_priority_class != subprocess.ABOVE_NORMAL_PRIORITY_CLASS:
+                        raise RuntimeError("Worker scheduling class was not applied")
                 reader = Thread(target=self._reader, args=(process.stdout,), daemon=True)
                 reader.start()
                 message = self._receive(startup_timeout)
@@ -122,6 +142,8 @@ class RvcProcessStream:
                     try:
                         sequence, packet, enqueued = self._inputs.get(timeout=.05)
                     except Empty:
+                        if process.poll() is not None:
+                            raise RuntimeError("CPU worker exited while idle")
                         continue
                     request = dict(type="convert", sequence=sequence, pitch=self._pitch,
                                    audio=base64.b64encode(packet).decode("ascii"))
@@ -199,12 +221,18 @@ class RvcProcessStream:
                     worker_pid=self._process.pid if self._process else None,
                     experimental_dynamic_block_base=self._dynamic_block_base,
                     experimental_synthesis_backend=self._synthesis_backend,
+                    experimental_worker_priority=self._worker_priority,
+                    verified_priority_class=self._verified_priority_class,
                     last_compute_ms=self._last_compute_ms)
 
     def metrics(self):
         """Last 256 packet timing records; contains no audio or file paths."""
         with self._metrics_lock:
             return list(self._metrics)
+
+    def abort(self, reason):
+        """Stop with silence without waiting for model/pipe work."""
+        self._fail(reason)
 
     def close(self):
         self._stop.set()
