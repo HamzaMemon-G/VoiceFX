@@ -117,10 +117,13 @@ def main(argv=None):
                 timings.append(row)
                 sequence=row['sequence']
         state=stream.status()
+        # Strict buffering stops on the first gap; it does not count lost samples.
+        missing=state.get('missing_samples',0 if fault is None else None)
         report.update(evaluate(capture==args.seconds*48000,first_play,fault,
-            state.get('missing_samples',0),[r['compute_ms'] for r in timings],callbacks))
+            missing,[r['compute_ms'] for r in timings],callbacks))
         report.update(fault=fault,capture_samples=capture,converted_playout_samples=played,
-            missing_samples=state.get('missing_samples',0),
+            missing_samples=missing,
+            loss_count_scope='Zero only for an uninterrupted strict stream; null after a strict fault because lost samples were not counted',
             first_converted_playout_after_capture_start_ms=None if first_play is None else 1000*first_play,
             elapsed_seconds=time.perf_counter()-begin,observed_completed_packets=len(timings),
             model_p95_ms=float(np.percentile([r['compute_ms'] for r in timings],95)) if timings else None,
