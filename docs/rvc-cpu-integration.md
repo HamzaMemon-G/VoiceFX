@@ -170,3 +170,18 @@ It opens no devices and preserves private recordings. Reference parity requires
 maximum complete-waveform difference below `1e-4` and verified worker shutdown;
 it is unpaced and cannot establish CPU throughput or physical latency. Public
 fixtures retain source attribution and are separate from private sound snapshots.
+
+The clean CPU-only environment passed both public complete-waveform fixtures
+exactly, but its paced tests still underflowed after about 30 and 160 seconds.
+Changing from the training CUDA wheel to the CPU wheel did not establish live
+reliability. The second run also reported a transport shutdown failure.
+
+Windows cleanup now owns the newly created worker and its descendants in a
+private kill-on-close job. The worker starts suspended, joins that job, then
+resumes; a virtual-environment launcher cannot create an unowned child first.
+This prevents an inherited stdout handle in a descendant from keeping the
+reader alive after the launcher exits. The receive wait is cancellable, and
+cleanup checks reader termination rather than blocking on its text-pipe lock.
+Only this worker tree is affected. Regressions cover a descendant holding stdout
+and shutdown during an in-flight conversion. This fixes a lifecycle failure
+path; it does not reduce model computation or establish uninterrupted playback.

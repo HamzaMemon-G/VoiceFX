@@ -28,17 +28,22 @@ class ProcessContracts(unittest.TestCase):
     def create(self, mode="normal", capacity=3, conversion_timeout=2, dynamic=0,
                synthesis_backend="ort", worker_priority="normal", recover=False):
         service = self.root / "fake_service.py"
-        service.write_text('''import json,sys,time
+        service.write_text('''import json,sys,time,subprocess
+from pathlib import Path
 mode=MODE
 dynamic=int(sys.argv[sys.argv.index('--dynamic-block-base')+1])
 backend=sys.argv[sys.argv.index('--synthesis-backend')+1]
 time.sleep(10 if mode=='slow_start' else .1)
+if mode=='descendant_holds_pipe':
+ child=subprocess.Popen([sys.executable,'-c','import time;time.sleep(60)'],stdout=sys.stdout,stderr=sys.stderr,creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
+ Path(sys.argv[0]).with_suffix('.childpid').write_text(str(child.pid))
 print(json.dumps(dict(type='ready',frames=9600,sample_rate=48000,dynamic_block_base=0 if mode=='bad_schedule' else dynamic,synthesis_backend='ort' if mode=='bad_backend' else backend)),flush=True)
 if mode=='exit_idle':raise SystemExit(0)
 for line in sys.stdin:
  m=json.loads(line)
  if m['type']=='stop':break
  if mode=='slow':time.sleep(.5)
+ if mode=='hang_convert':time.sleep(60)
  sequence=m['sequence']+(1 if mode=='bad_order' else 0)
  print(json.dumps(dict(type='converted',sequence=sequence,audio=m['audio'],compute_ms=1.0)),flush=True)
 '''.replace("MODE", repr(mode)))
@@ -153,6 +158,39 @@ for line in sys.stdin:
         stream.close()
         self.assertIsNotNone(stream._process.poll())
         self.assertFalse(stream.status()["ready"])
+
+    @unittest.skipUnless(os.name == 'nt', 'Windows owned worker tree')
+    def test_shutdown_closes_descendant_inheriting_stdout(self):
+        import ctypes
+        from ctypes import wintypes
+        stream=self.create('descendant_holds_pipe')
+        self.wait(lambda: stream.status()['ready'])
+        pid=int((self.root/'fake_service.childpid').read_text())
+        kernel=ctypes.WinDLL('kernel32',use_last_error=True)
+        kernel.OpenProcess.argtypes=[wintypes.DWORD,wintypes.BOOL,wintypes.DWORD]
+        kernel.OpenProcess.restype=wintypes.HANDLE
+        kernel.WaitForSingleObject.argtypes=[wintypes.HANDLE,wintypes.DWORD]
+        kernel.CloseHandle.argtypes=[wintypes.HANDLE]
+        handle=kernel.OpenProcess(0x100000,False,pid)
+        self.assertTrue(handle)
+        try:
+            stream.close()
+            self.assertEqual(kernel.WaitForSingleObject(handle,2000),0)
+            self.assertFalse(stream._thread.is_alive())
+            self.assertFalse(stream._reader_thread.is_alive())
+        finally:
+            kernel.CloseHandle(handle)
+
+    def test_close_cancels_inflight_receive_and_ends_reader(self):
+        stream=self.create('hang_convert',conversion_timeout=30)
+        self.wait(lambda: stream.status()['ready'])
+        stream.submit(np.ones(9600))
+        time.sleep(.1)
+        started=time.monotonic()
+        stream.close()
+        self.assertLess(time.monotonic()-started,6)
+        self.assertIsNotNone(stream._process.poll())
+        self.assertFalse(stream._reader_thread.is_alive())
 
 
 if __name__ == "__main__":

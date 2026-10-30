@@ -63,6 +63,8 @@ class RvcProcessStream:
         self._metrics = deque(maxlen=256)
         self._sequence = 0
         self._process = None
+        self._job = None
+        self._reader_thread = None
         self._pitch = pitch
         self._dynamic_block_base = dynamic_block_base
         self._synthesis_backend = synthesis_backend
@@ -86,7 +88,18 @@ class RvcProcessStream:
         self._stop.set()
 
     def _receive(self, timeout):
-        message = self._messages.get(timeout=timeout)
+        deadline = time.monotonic()+timeout
+        while True:
+            if self._stop.is_set():
+                raise RuntimeError('CPU worker receive cancelled')
+            remaining=deadline-time.monotonic()
+            if remaining<=0:
+                raise Empty
+            try:
+                message=self._messages.get(timeout=min(.05,remaining))
+                break
+            except Empty:
+                continue
         if message.get("type") == "error":
             raise RuntimeError(message.get("message", "CPU worker failed"))
         return message
@@ -119,10 +132,16 @@ class RvcProcessStream:
                 flags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
                 if self._worker_priority == "above_normal":
                     flags |= subprocess.ABOVE_NORMAL_PRIORITY_CLASS
+                if os.name == 'nt':
+                    from windows_worker_job import WindowsWorkerJob
+                    self._job=WindowsWorkerJob()
+                    flags |= WindowsWorkerJob.suspended_creation_flag
                 process = subprocess.Popen(command, stdin=subprocess.PIPE,
                     stdout=subprocess.PIPE, stderr=log, text=True, encoding="utf8",
                     bufsize=1, creationflags=flags)
                 self._process = process
+                if self._job is not None:
+                    self._job.assign_and_resume(process)
                 if self._worker_priority == "above_normal":
                     import ctypes
                     from ctypes import wintypes
@@ -133,6 +152,7 @@ class RvcProcessStream:
                     if self._verified_priority_class != subprocess.ABOVE_NORMAL_PRIORITY_CLASS:
                         raise RuntimeError("Worker scheduling class was not applied")
                 reader = Thread(target=self._reader, args=(process.stdout,), daemon=True)
+                self._reader_thread=reader
                 reader.start()
                 message = self._receive(startup_timeout)
                 if (message.get("type") != "ready" or message.get("frames") != self.frames
@@ -184,6 +204,8 @@ class RvcProcessStream:
                 self._fail(f"CPU transport failed: {type(exc).__name__}")
         finally:
             self._ready.clear()
+            if self._job is not None:
+                self._job.close()
             if process is not None:
                 if process.poll() is None:
                     process.terminate()
@@ -192,8 +214,13 @@ class RvcProcessStream:
                     except subprocess.TimeoutExpired:
                         process.kill()
                         process.wait(timeout=2)
+                if self._reader_thread is not None:
+                    self._reader_thread.join(timeout=2)
                 for pipe in (process.stdin, process.stdout):
                     if pipe:
+                        # Never block on a text-pipe lock held by a live reader.
+                        if pipe is process.stdout and self._reader_thread is not None and self._reader_thread.is_alive():
+                            continue
                         pipe.close()
 
     def submit(self, audio):
@@ -244,11 +271,15 @@ class RvcProcessStream:
         self.buffer.abort("Stream closed")
         self._thread.join(timeout=3)
         if self._thread.is_alive() and self._process is not None:
-            if self._process.poll() is None:
+            if self._job is not None:
+                self._job.close()
+            elif self._process.poll() is None:
                 self._process.terminate()
             self._thread.join(timeout=3)
         if self._thread.is_alive():
             raise RuntimeError("CPU transport did not stop")
+        if self._reader_thread is not None and self._reader_thread.is_alive():
+            raise RuntimeError('CPU worker reader did not stop')
 
     def __enter__(self):
         return self
