@@ -76,3 +76,8 @@ played all samples without a stream fault using explicit startup buffering.
 Broader sustained speech tests, physical latency, microphone and laptop testing
 remain outstanding. This option is still experimental and is not enabled by the
 audio app.
+
+Follow-up reliability checks on two held-out public speakers underflowed after
+approximately 51 and 116 seconds. Neither completed its planned ten minutes.
+Consequently the earlier 320-second pass does not establish general reliability;
+the experimental backend remains unsuitable for an approved live release.
