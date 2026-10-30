@@ -142,3 +142,23 @@ model alignment and hardware delay. The results demonstrate bounded recovery,
 not acceptable uninterrupted live speech. Defaults and audio routes remain
 unchanged. Further offline work attributes stalls to individual model stages
 and CPU service before selecting another optimization.
+
+`app/rvc_cpu_check.py` is an opt-in, file-driven check for another CPU when the
+runtime dependencies and model paths are available. It opens no audio devices,
+changes no saved settings and stores reports and timings, rather than source
+audio. It accepts a mono 16-bit PCM WAV at 16 or 48 kHz. The source repeats for
+the requested duration; repetition is a workload test, not a test of new words.
+Its 20 ms simulated capture callbacks exercise the actual capture bridge and
+separate worker. The first complete model packet arrives after 200 ms of
+simulated capture, so capture-start and post-packet timing are distinguished.
+
+Run `python app/rvc_cpu_check.py --help` for explicit source, snapshot, RVC and
+package paths. Defaults remain ORT, normal worker priority and dynamic-work
+option zero. OpenVINO and other experimental options must be requested
+explicitly. Reports preserve the source SHA, runtime options, all observed
+completed-packet timings, faults, startup timing and shutdown outcome. Existing
+report files are never overwritten. A finished run can still fail: the checker
+requires uninterrupted playback, model p95 at most 160 ms per 200 ms packet and
+callback work within 20 ms. It does not drain the live queue at the end and does
+not claim that queued tail audio played. A simulated pass still requires sound,
+sustained-load, microphone and physical-latency validation on the target machine.
