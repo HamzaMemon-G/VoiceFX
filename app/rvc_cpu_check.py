@@ -83,7 +83,7 @@ def main(argv=None):
     capture=0
     sequence=-1
     bridge=RvcCaptureBridge(stream)
-    watch=None if args.allow_game_co_load else GameLoadWatch(stream.abort)
+    watch=None
     report=dict(scope='File-driven real-worker CPU check, simulated callbacks only',
         source_sha256=source_sha,source_looped=True,requested_seconds=args.seconds,
         processing_packet_ms=200,callback_ms=20,startup_queue_ms=400,max_queue_ms=600,
@@ -93,6 +93,8 @@ def main(argv=None):
         known_games_at_start=games,intentional_game_co_load=args.allow_game_co_load,
         warning='No microphone, devices, game load, routing, physical latency or XPS readiness is measured. No source audio is saved. Finite check stops without draining the live queue; tail samples are not certified played.')
     try:
+        if not args.allow_game_co_load:
+            watch=GameLoadWatch(stream.abort)
         while not stream.status()['ready']:
             if stream.status()['state']=='fault':
                 raise RuntimeError(stream.status()['fault'])

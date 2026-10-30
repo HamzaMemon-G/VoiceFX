@@ -60,8 +60,9 @@ def main(argv=None):
             disable_execution_throttling=args.disable_execution_throttling)
         actual=[]
         row=dict(name=entry['name'],source_sha256=entry['source_sha256'])
-        watch=GameLoadWatch(stream.abort)
+        watch=None
         try:
+            watch=GameLoadWatch(stream.abort)
             deadline=time.monotonic()+610
             while not stream.status()['ready']:
                 if stream.status()['state']=='fault' or time.monotonic()>deadline:
@@ -80,12 +81,16 @@ def main(argv=None):
             row.update(waveform_max_abs=error,passed=error<1e-4)
         except Exception as exc:
             row.update(passed=False,error=str(exc))
+            if watch is None:
+                blocked=True
+                row['resource_watch_error']=type(exc).__name__
         finally:
             try:
-                watch.close()
-                resource=watch.status()
-                row['resource_watch']=resource
-                blocked=resource['blocked']
+                if watch is not None:
+                    watch.close()
+                    resource=watch.status()
+                    row['resource_watch']=resource
+                    blocked=resource['blocked']
             except Exception as exc:
                 blocked=True
                 row['resource_watch_error']=type(exc).__name__

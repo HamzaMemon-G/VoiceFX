@@ -17,7 +17,7 @@ from windows_resource_guard import GameLoadWatch
 
 
 class ResourcePreflight(unittest.TestCase):
-    def test_game_during_fixture_startup_closes_worker_and_skips_next_case(self):
+    def fixture_startup_case(self,watch_failure=False):
         with tempfile.TemporaryDirectory() as folder:
             root=Path(folder)
             source=root/'public.wav'
@@ -40,15 +40,23 @@ class ResourcePreflight(unittest.TestCase):
             with patch.object(rvc_cpu_fixture_check,'active_games',return_value=[]), \
                  patch.object(rvc_cpu_fixture_check,'load_source',return_value=np.zeros(9600,dtype=np.float32)), \
                  patch.object(rvc_cpu_fixture_check,'RvcProcessStream',return_value=stream) as factory, \
-                 patch.object(rvc_cpu_fixture_check,'GameLoadWatch',return_value=watch):
+                 patch.object(rvc_cpu_fixture_check,'GameLoadWatch',return_value=watch,
+                     side_effect=RuntimeError('observer unavailable') if watch_failure else None):
                 self.assertEqual(rvc_cpu_fixture_check.main(args),2)
                 self.assertEqual(factory.call_count,1)
                 stream.close.assert_called_once()
-                watch.close.assert_called_once()
+                if not watch_failure:
+                    watch.close.assert_called_once()
             result=json.loads((root/'report.json').read_text())
             self.assertTrue(result['resource_blocked'])
             self.assertFalse(result['public_waveform_parity_passed'])
             self.assertEqual(len(result['cases']),1)
+
+    def test_game_during_fixture_startup_closes_worker_and_skips_next_case(self):
+        self.fixture_startup_case()
+
+    def test_failed_watch_construction_still_closes_worker(self):
+        self.fixture_startup_case(watch_failure=True)
 
     def test_game_start_aborts_only_supplied_workload_and_stops_watch(self):
         aborted=Event()
