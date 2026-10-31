@@ -78,6 +78,8 @@ class RvcProcessStream:
         self._worker_priority = worker_priority
         self._verified_priority_class = None
         self._last_compute_ms = None
+        self._inflight = None
+        self._fault_inflight = None
         command = [str(python), "-u", str(SERVICE_PATH), "--snapshot", str(snapshot),
                    "--rvc-root", str(rvc_root), "--ort-packages", str(ort_packages),
                    "--dynamic-block-base", str(dynamic_block_base),
@@ -192,6 +194,7 @@ class RvcProcessStream:
                     request = dict(type="convert", sequence=sequence, pitch=self._pitch,
                                    audio=base64.b64encode(packet).decode("ascii"))
                     sent = time.perf_counter()
+                    self._inflight = (sequence, sent)
                     process.stdin.write(json.dumps(request) + "\n")
                     process.stdin.flush()
                     message = self._receive(conversion_timeout)
@@ -210,6 +213,7 @@ class RvcProcessStream:
                         break
                     self._last_compute_ms = compute_ms
                     received = time.perf_counter()
+                    self._inflight = None
                     with self._metrics_lock:
                         self._metrics.append(dict(sequence=sequence, compute_ms=compute_ms,
                             input_wait_ms=1000 * (sent - enqueued),
@@ -262,12 +266,20 @@ class RvcProcessStream:
     def read(self, frames):
         output = self.buffer.read(frames)
         if self.buffer.status()["state"] == "fault":
+            pending = self._inflight
+            if pending is not None and self._fault_inflight is None:
+                self._fault_inflight = dict(sequence=pending[0],
+                    age_ms=1000 * (time.perf_counter() - pending[1]))
             self._ready.clear()
             self._stop.set()
         return output
 
     def status(self):
+        pending = self._inflight
         return dict(self.buffer.status(), ready=self._ready.is_set(),
+                    inflight_at_fault=self._fault_inflight,
+                    inflight_sequence=None if pending is None else pending[0],
+                    inflight_age_ms=None if pending is None else 1000 * (time.perf_counter() - pending[1]),
                     queued_input_packets=self._inputs.qsize(),
                     worker_pid=self._process.pid if self._process else None,
                     experimental_dynamic_block_base=self._dynamic_block_base,
