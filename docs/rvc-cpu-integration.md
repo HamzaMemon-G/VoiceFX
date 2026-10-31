@@ -287,3 +287,30 @@ Defaults remain unchanged. Synthesis thread pinning retained exact public output
 but worsened timing and was rejected. A separate 250 ms packet experiment also
 failed its headroom/deadline checks and was not integrated. No routing, global
 OS/security settings, saved devices or approved model assets were changed.
+
+### 31 October: independent-window feature batching (offline experiment)
+
+The rejected fast Beatrice audition remains rejected. No substitute was enabled.
+An offline RVC experiment batches two independent original feature windows,
+preserving each packet's context, sequential pitch-cache updates, excitation RNG
+and output alignment. Strict feature gates passed (maximum absolute difference
+8.23e-6, relative L2 below1.2e-6). Feature-only mean throughput improved15.4%.
+Actual stream window prediction matched inputs exactly, and both public complete
+waveforms passed the unchanged1e-4 maximum absolute gate (1.762e-5/1.372e-5).
+These experiments did not establish private parity or live callback performance.
+
+Restoring concurrent pitch extraction gave a paced public pair-compute trial:
+300pairs/source,400ms of input per pair; means283.5/282.1ms, p95349.0/306.4ms,
+but2/5pairs exceeded400ms and worst622.9ms. This is not a zero-loss pass.
+Batching also waits for an additional input packet; no physical latency is claimed.
+
+A following observer run preserved the public waveform (1.762e-5) but under
+observed system contention failed much more severely: means416.2/404.3ms and
+121/94over-budget pairs. Both feature and synthesis stages stalled; pitch wait
+was negligible. During slow Libri pairs, median own CPU service was equivalent
+to3.03cores versus4.11for within-budget pairs. A short independent process sample
+showed Chrome using approximately2cores while the worker used3.8. This supports
+investigating competing CPU activity, not proof that Chrome alone caused stalls.
+No apps, OS/security settings, priorities, routes, preferences or model defaults
+were changed. User offered to pause heavy activity; a marker preserves that point.
+This run is not an idle-PC benchmark. All reports remain local under outputs.
