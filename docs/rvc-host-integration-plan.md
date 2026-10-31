@@ -39,3 +39,11 @@ The optional session now owns an independent Monitor, disabled initially;
 model-free tests verify headphone toggles leave game output identical and do
 not add another inference queue. No devices are opened by this seam. Six host
 lifecycle/monitor tests pass. Main audio application wiring remains pending.
+
+The injected host controller now has synthetic-driver coverage through the real
+session, packetizer, mute and output callback, including cleanup order and an
+unexpectedly inactive driver. Sixteen model-free integration tests pass. The
+controller constructs a driver only after worker readiness and closes it before
+worker teardown. Main-app device wiring remains disabled; no hardware test has
+been performed. Actual callback public replays also passed exact waveform parity
+for both fixtures, distinct from the earlier session-only replay.
