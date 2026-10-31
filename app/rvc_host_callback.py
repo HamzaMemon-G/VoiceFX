@@ -1,5 +1,6 @@
 """Device-free callback adapter for an explicitly selected experimental session."""
 import math
+import numpy as np
 
 
 class RvcHostCallback:
@@ -23,16 +24,27 @@ class RvcHostCallback:
             self.error = "Invalid playback volume."
             self.stop.set()
             return
+        try:
+            self._render(indata, outdata, frames)
+        except Exception as exc:
+            outdata.fill(0)
+            self.error = "Voice callback failed: " + type(exc).__name__
+            self.stop.set()
+
+    def _render(self, indata, outdata, frames):
         state = self.session.status()
         if state['state'] in ('fault', 'stopped'):
             self.error = "Voice worker stopped. No microphone fallback."
             self.stop.set()
             return
         if (indata.ndim != 2 or len(indata) != frames or
-                outdata.ndim != 2 or len(outdata) != frames or indata.shape[1] < 1):
+                outdata.ndim != 2 or len(outdata) != frames or
+                indata.shape[1] < 1 or outdata.shape[1] < 1):
             self.error = "Unexpected audio callback shape."
             self.stop.set()
             return
         output = self.session.process(indata.mean(axis=1), mute=self.mute, volume=self.volume)
+        if output.shape != (frames,) or not np.isfinite(output).all():
+            raise ValueError("Invalid converted callback output")
         if not self.stop.is_set():
             outdata[:] = output[:, None]

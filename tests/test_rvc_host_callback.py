@@ -15,6 +15,24 @@ class StopCallback(Exception):
     pass
 
 class CallbackContracts(unittest.TestCase):
+    def test_failed_render_leaves_silence_and_requests_host_cleanup(self):
+        for result in (RuntimeError('worker gone'), np.array([np.nan] * 4), np.ones(3)):
+            class FailedSession:
+                def status(self):
+                    return {'state': 'ready'}
+                def process(self, *args, **kwargs):
+                    if isinstance(result, Exception):
+                        raise result
+                    return result
+            stop = Event()
+            callback = RvcHostCallback(FailedSession(), stop, StopCallback)
+            output = np.ones((4, 1), dtype=np.float32)
+            callback(np.ones((4, 1)), output, 4, None,
+                     SimpleNamespace(input_overflow=False, output_underflow=False))
+            self.assertTrue(stop.is_set())
+            self.assertFalse(output.any())
+            self.assertIn('Voice callback failed', callback.error)
+
     def test_volume_and_mute_match_headphone_and_game_destinations(self):
         stream = OwnedStream()
         with RvcHostSession() as session:
