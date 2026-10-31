@@ -14,6 +14,7 @@ class RvcHostController:
         self.error = ''
         self.driver_started = False
         self.last_worker_status = None
+        self.packet_metrics = []
         self._start_lock = Lock()
         self._started = False
 
@@ -55,6 +56,7 @@ class RvcHostController:
                         if self.last_worker_status['state'] in ('fault', 'stopped'):
                             raise RuntimeError('Voice worker stopped: ' + str(self.last_worker_status.get('fault')))
                     self.last_worker_status = session.status()
+                    self.packet_metrics = session.metrics() if hasattr(session, 'metrics') else []
                 if self.callback.error:
                     self.error = self.callback.error
         except Exception as exc:

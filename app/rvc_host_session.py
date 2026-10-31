@@ -69,6 +69,10 @@ class RvcHostSession:
             return {"state": "initializing" if self._started else "idle", "ready": False}
         return stream.status()
 
+    def metrics(self):
+        stream = self._stream
+        return stream.metrics() if stream is not None else []
+
     def close(self):
         with self._lock:
             self._closed = True

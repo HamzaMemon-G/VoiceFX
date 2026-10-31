@@ -28,6 +28,7 @@ class EntryContracts(unittest.TestCase):
             controller.return_value.driver_started = False
             controller.return_value.error = ''
             controller.return_value.last_worker_status = None
+            controller.return_value.packet_metrics = []
             self.assertEqual(main(self.args() + ['--start']), 2)
             controller.return_value.run.assert_not_called()
             timer.return_value.cancel.assert_called_once()

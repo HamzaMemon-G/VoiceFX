@@ -60,6 +60,7 @@ def main(argv=None):
         args.log_file.with_suffix('.status.json').write_text(json.dumps(dict(
             driver_started=controller.driver_started, error=controller.error,
             worker=controller.last_worker_status,
+            packet_metrics=controller.packet_metrics,
             scope='Temporary hardware trial; no audio recorded; physical latency unmeasured'), indent=2))
     if controller.error:
         print('Trial stopped: ' + controller.error)
