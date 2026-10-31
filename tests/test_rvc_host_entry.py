@@ -21,9 +21,13 @@ class EntryContracts(unittest.TestCase):
              patch.dict(sys.modules, {'sounddevice': SimpleNamespace(CallbackStop=RuntimeError)}), \
              patch('rvc_experimental_session.VoiceSessionLock') as lock, \
              patch('rvc_experimental_session.RvcHostController') as controller, \
+             patch('pathlib.Path.write_text'), \
              patch('rvc_experimental_session.Timer') as timer, \
              contextlib.redirect_stdout(io.StringIO()):
             lock.return_value.__enter__.side_effect = RuntimeError('Another VoiceFX session')
+            controller.return_value.driver_started = False
+            controller.return_value.error = ''
+            controller.return_value.last_worker_status = None
             self.assertEqual(main(self.args() + ['--start']), 2)
             controller.return_value.run.assert_not_called()
             timer.return_value.cancel.assert_called_once()
@@ -58,6 +62,7 @@ class EntryContracts(unittest.TestCase):
              patch.dict(sys.modules, {'sounddevice': sd}), \
              patch('rvc_experimental_session.VoiceSessionLock'), \
              patch('rvc_experimental_session.Timer') as timer, \
+             patch('pathlib.Path.write_text'), \
              contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(main(args), 0)
         np.testing.assert_array_equal(output[0], np.ones((4, 2)))

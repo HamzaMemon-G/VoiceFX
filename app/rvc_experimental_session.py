@@ -1,5 +1,6 @@
 """Explicit, session-only Pop CPU hardware trial; main app defaults stay unchanged."""
 import argparse
+import json
 from pathlib import Path
 from threading import Timer
 
@@ -39,6 +40,7 @@ def main(argv=None):
     import sounddevice as sd
     controller = RvcHostController()
     def driver(callback):
+        print('Voice worker ready; opening explicitly selected audio devices.', flush=True)
         callback.session.monitor.enabled = args.hear_myself
         return explicit_driver(sd, callback, input_name=args.input_name,
             output_name=args.output_name, monitor_name=args.monitor_name)
@@ -55,6 +57,10 @@ def main(argv=None):
         return 2
     finally:
         timer.cancel()
+        args.log_file.with_suffix('.status.json').write_text(json.dumps(dict(
+            driver_started=controller.driver_started, error=controller.error,
+            worker=controller.last_worker_status,
+            scope='Temporary hardware trial; no audio recorded; physical latency unmeasured'), indent=2))
     if controller.error:
         print('Trial stopped: ' + controller.error)
         return 1

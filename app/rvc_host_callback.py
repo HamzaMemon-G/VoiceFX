@@ -34,7 +34,7 @@ class RvcHostCallback:
     def _render(self, indata, outdata, frames):
         state = self.session.status()
         if state['state'] in ('fault', 'stopped'):
-            self.error = "Voice worker stopped. No microphone fallback."
+            self.error = "Voice worker stopped: " + str(state.get('fault') or 'No microphone fallback')
             self.stop.set()
             return
         if (indata.ndim != 2 or len(indata) != frames or

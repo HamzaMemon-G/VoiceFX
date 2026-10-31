@@ -13,6 +13,7 @@ class RvcHostController:
         self.callback = None
         self.error = ''
         self.driver_started = False
+        self.last_worker_status = None
         self._start_lock = Lock()
         self._started = False
 
@@ -48,10 +49,12 @@ class RvcHostController:
                 with driver_factory(self.callback) as driver:
                     self.driver_started = True
                     while not self.stop.wait(.02):
+                        self.last_worker_status = session.status()
                         if driver is not None and not getattr(driver, 'active', True):
                             raise RuntimeError('Audio driver stopped unexpectedly')
-                        if session.status()['state'] in ('fault', 'stopped'):
-                            raise RuntimeError('Voice worker stopped')
+                        if self.last_worker_status['state'] in ('fault', 'stopped'):
+                            raise RuntimeError('Voice worker stopped: ' + str(self.last_worker_status.get('fault')))
+                    self.last_worker_status = session.status()
                 if self.callback.error:
                     self.error = self.callback.error
         except Exception as exc:
