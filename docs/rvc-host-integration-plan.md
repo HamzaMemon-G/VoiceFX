@@ -47,3 +47,11 @@ controller constructs a driver only after worker readiness and closes it before
 worker teardown. Main-app device wiring remains disabled; no hardware test has
 been performed. Actual callback public replays also passed exact waveform parity
 for both fixtures, distinct from the earlier session-only replay.
+
+A separate rvc_experimental_session.py entrypoint now prepares an explicit,
+bounded temporary hardware trial. It requires --start plus all runtime paths
+and exact input/output names; no startup/default-device fallback is available.
+Hear Myself requires separate headphones. Missing opt-in, invalid duration or
+missing headphone selection reject before runtime/device access. The entrypoint
+has NOT been run against hardware. Twenty-two model-free host tests pass.
+Main UI/model selections remain unchanged; no saved preferences are written.
