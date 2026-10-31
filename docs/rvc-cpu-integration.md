@@ -269,3 +269,21 @@ were not drained or certified played. These are sustained simulation passes,
 not live hardware or XPS approval. Main-app activation remains disabled.
 The shorter paired policy trial passed in both modes and provides no evidence
 that requesting the execution-speed opt-out helps; its default remains false.
+
+### 31 October attended desktop test: reliability still fails
+
+The user heard a converted greeting and most of a longer sentence through the
+explicit Razer microphone/headphone test, followed by cutoff. The diagnostic
+recorded converted-audio queue underflow, not a sentence-boundary stop. In the
+instrumented run, 64 completed packets averaged 173.59 ms but p95 was 238.56 ms
+and maximum was 325.48 ms; the unfinished packet is not represented by those
+completed-only statistics. Pipe overhead averaged 1.91 ms. No audio was recorded.
+
+A current-state public reference also underflowed after 4.16 seconds. This
+supersedes any inference of current live readiness from the earlier 900-second
+passes. A user-authorized explicit additional 200 ms startup buffer likewise
+underflowed after 5.17 seconds; it is a measured delay tradeoff, not a CPU fix.
+Defaults remain unchanged. Synthesis thread pinning retained exact public output
+but worsened timing and was rejected. A separate 250 ms packet experiment also
+failed its headroom/deadline checks and was not integrated. No routing, global
+OS/security settings, saved devices or approved model assets were changed.
