@@ -6,6 +6,7 @@ from threading import Timer
 from rvc_host_controller import RvcHostController
 from rvc_host_driver import explicit_driver
 from rvc_host_profile import RvcHostProfile
+from voice_session_lock import VoiceSessionLock
 
 
 def main(argv=None):
@@ -45,9 +46,13 @@ def main(argv=None):
     timer.daemon = True
     timer.start()
     try:
-        controller.run(profile, driver, sd.CallbackStop)
+        with VoiceSessionLock():
+            controller.run(profile, driver, sd.CallbackStop)
     except KeyboardInterrupt:
         controller.stop.set()
+    except RuntimeError as exc:
+        print('Trial not started: ' + str(exc))
+        return 2
     finally:
         timer.cancel()
     if controller.error:

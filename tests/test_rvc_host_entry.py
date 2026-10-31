@@ -42,6 +42,7 @@ class EntryContracts(unittest.TestCase):
         with patch('rvc_experimental_session.RvcHostProfile', return_value=profile), \
              patch('windows_resource_guard.active_games', return_value=[]), \
              patch.dict(sys.modules, {'sounddevice': sd}), \
+             patch('rvc_experimental_session.VoiceSessionLock'), \
              patch('rvc_experimental_session.Timer') as timer, \
              contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(main(args), 0)
