@@ -19,7 +19,8 @@ def main(argv=None):
     parser.add_argument('--monitor-name', default='')
     parser.add_argument('--hear-myself', action='store_true')
     parser.add_argument('--pitch', type=float, default=-9)
-    parser.add_argument('--seconds', type=int, default=60)
+    parser.add_argument('--seconds', type=int, default=60,
+                        help='Total trial time budget including model initialization')
     args = parser.parse_args(argv)
     if not args.start:
         parser.error('No devices opened. Supply --start for an explicit temporary trial.')
@@ -52,6 +53,9 @@ def main(argv=None):
     if controller.error:
         print('Trial stopped: ' + controller.error)
         return 1
+    if not controller.driver_started:
+        print('Trial ended before audio devices started; no hardware result was measured.')
+        return 2
     print('Temporary trial stopped. Saved devices and routing were not modified.')
     return 0
 

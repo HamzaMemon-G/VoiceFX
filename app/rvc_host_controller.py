@@ -12,6 +12,7 @@ class RvcHostController:
         self.session_factory = session_factory
         self.callback = None
         self.error = ''
+        self.driver_started = False
         self._start_lock = Lock()
         self._started = False
 
@@ -45,6 +46,7 @@ class RvcHostController:
                     return
                 self.callback = RvcHostCallback(session, self.stop, callback_stop)
                 with driver_factory(self.callback) as driver:
+                    self.driver_started = True
                     while not self.stop.wait(.02):
                         if driver is not None and not getattr(driver, 'active', True):
                             raise RuntimeError('Audio driver stopped unexpectedly')
