@@ -12,6 +12,9 @@ from test_rvc_capture_bridge import ImmediateStream
 
 
 class OwnedStream(ImmediateStream):
+    def metrics(self):
+        return []
+
     def __init__(self):
         super().__init__()
         self.close_count = 0
