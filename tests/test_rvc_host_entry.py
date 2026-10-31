@@ -14,6 +14,20 @@ from test_rvc_host_session import OwnedStream
 
 
 class EntryContracts(unittest.TestCase):
+    def test_existing_session_rejects_before_worker_or_driver(self):
+        profile = SimpleNamespace(worker_options=lambda: {})
+        with patch('rvc_experimental_session.RvcHostProfile', return_value=profile), \
+             patch('windows_resource_guard.active_games', return_value=[]), \
+             patch.dict(sys.modules, {'sounddevice': SimpleNamespace(CallbackStop=RuntimeError)}), \
+             patch('rvc_experimental_session.VoiceSessionLock') as lock, \
+             patch('rvc_experimental_session.RvcHostController') as controller, \
+             patch('rvc_experimental_session.Timer') as timer, \
+             contextlib.redirect_stdout(io.StringIO()):
+            lock.return_value.__enter__.side_effect = RuntimeError('Another VoiceFX session')
+            self.assertEqual(main(self.args() + ['--start']), 2)
+            controller.return_value.run.assert_not_called()
+            timer.return_value.cancel.assert_called_once()
+
     def test_full_opt_in_entrypoint_with_synthetic_devices_and_worker(self):
         stream = OwnedStream()
         output = []

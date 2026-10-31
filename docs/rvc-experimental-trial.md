@@ -2,8 +2,8 @@
 
 Prepared locally, not a live release. The existing VoiceFX UI and saved device
 choices remain unchanged. Do not run this while someone else uses audio or a
-game. Close other VoiceFX sessions first; this separate experimental entrypoint
-does not share the original application's session lock.
+game. This entrypoint shares the original application's named admission lock
+and refuses simultaneous sessions before starting its worker or audio devices.
 
 Use the app interpreter (work/VoiceFX/.venv/Scripts/python.exe) for the host:
 it already has sounddevice. Pass work/cpu-inference-env/Scripts/python.exe as
