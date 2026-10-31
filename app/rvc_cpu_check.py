@@ -48,6 +48,8 @@ def main(argv=None):
     parser.add_argument('--python',type=Path,default=Path(sys.executable))
     parser.add_argument('--seconds',type=int,default=600)
     parser.add_argument('--pitch',type=float,default=-9.)
+    parser.add_argument('--startup-ms',type=int,choices=(400,600),default=400,
+                        help='Explicit queue tradeoff; 600 adds 200 ms startup delay')
     parser.add_argument('--dynamic-block-base',type=int,choices=(0,4),default=0)
     parser.add_argument('--synthesis-backend',choices=('ort','openvino'),default='ort')
     parser.add_argument('--openvino-packages',type=Path)
@@ -70,7 +72,8 @@ def main(argv=None):
     audio=load_source(args.source)
     source_sha=hashlib.sha256(args.source.read_bytes()).hexdigest()
     stream=RvcProcessStream(args.python,args.snapshot,args.rvc_root,args.ort_packages,
-        args.report.with_suffix('.worker.log'),startup_packets=2,max_packets=3,
+        args.report.with_suffix('.worker.log'),startup_packets=args.startup_ms//200,
+        max_packets=args.startup_ms//200+1,
         pitch=args.pitch,dynamic_block_base=args.dynamic_block_base,
         synthesis_backend=args.synthesis_backend,openvino_packages=args.openvino_packages,
         worker_priority=args.worker_priority,disable_execution_throttling=args.disable_execution_throttling)
@@ -86,7 +89,8 @@ def main(argv=None):
     watch=None
     report=dict(scope='File-driven real-worker CPU check, simulated callbacks only',
         source_sha256=source_sha,source_looped=True,requested_seconds=args.seconds,
-        processing_packet_ms=200,callback_ms=20,startup_queue_ms=400,max_queue_ms=600,
+        processing_packet_ms=200,callback_ms=20,startup_queue_ms=args.startup_ms,
+        max_queue_ms=args.startup_ms+200,
         pitch=args.pitch,dynamic_block_base=args.dynamic_block_base,
         synthesis_backend=args.synthesis_backend,worker_priority=args.worker_priority,
         experimental_disable_execution_throttling=args.disable_execution_throttling,

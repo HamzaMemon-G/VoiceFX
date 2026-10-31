@@ -13,11 +13,14 @@ class RvcHostProfile:
     openvino_packages: Path
     log_file: Path
     pitch: float = -9.0
+    startup_ms: int = 400
 
     def worker_options(self):
         """Validate dependencies before any device open; worker checks hashes."""
         if not math.isfinite(self.pitch) or not -24 <= self.pitch <= 24:
             raise ValueError('Invalid session pitch')
+        if type(self.startup_ms) is not int or self.startup_ms not in (400, 600):
+            raise ValueError('Explicit startup buffering must be 400 or 600 ms')
         paths = {name: Path(getattr(self, name)).resolve() for name in
                  ('python', 'snapshot', 'rvc_root', 'ort_packages', 'openvino_packages', 'log_file')}
         if not paths['python'].is_file():
@@ -32,7 +35,8 @@ class RvcHostProfile:
         # Prevent diagnostics accidentally modifying any frozen runtime file.
         if paths['log_file'].is_relative_to(paths['snapshot']):
             raise ValueError('Diagnostic log must be outside frozen runtime')
-        return dict(paths, startup_packets=2, max_packets=3, pitch=self.pitch,
+        return dict(paths, startup_packets=self.startup_ms // 200,
+                    max_packets=self.startup_ms // 200 + 1, pitch=self.pitch,
                     dynamic_block_base=4, synthesis_backend='openvino',
                     worker_priority='above_normal', recover_underflow=False,
                     disable_execution_throttling=False)

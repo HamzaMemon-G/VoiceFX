@@ -21,6 +21,8 @@ def main(argv=None):
     parser.add_argument('--monitor-name', default='')
     parser.add_argument('--hear-myself', action='store_true')
     parser.add_argument('--pitch', type=float, default=-9)
+    parser.add_argument('--startup-ms', type=int, choices=(400, 600), default=400,
+                        help='Explicit startup queue; 600 adds 200 ms delay, not CPU speed')
     parser.add_argument('--seconds', type=int, default=60,
                         help='Total trial time budget including model initialization')
     args = parser.parse_args(argv)
@@ -31,7 +33,7 @@ def main(argv=None):
     if args.hear_myself and not args.monitor_name:
         parser.error('Choose separate headphones before enabling Hear Myself')
     profile = RvcHostProfile(args.python, args.snapshot, args.rvc_root,
-        args.ort_packages, args.openvino_packages, args.log_file, args.pitch)
+        args.ort_packages, args.openvino_packages, args.log_file, args.pitch, args.startup_ms)
     profile.worker_options()
     from windows_resource_guard import active_games
     if active_games():
