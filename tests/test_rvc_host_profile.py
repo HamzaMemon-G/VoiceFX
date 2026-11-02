@@ -26,6 +26,10 @@ class ProfileContracts(unittest.TestCase):
             self.assertEqual(options['synthesis_backend'], 'openvino')
             larger = replace(profile, startup_ms=600).worker_options()
             self.assertEqual((larger['startup_packets'], larger['max_packets']), (3, 4))
+            experimental = replace(profile, startup_ms=1000).worker_options()
+            self.assertEqual((experimental['startup_packets'], experimental['max_packets']), (5, 6))
+            self.assertFalse(experimental['recover_underflow'])
+            self.assertEqual(profile.startup_ms, 400)
             self.assertEqual(before, sorted(str(p) for p in root.rglob('*')))
             with self.assertRaises(FrozenInstanceError):
                 profile.pitch = 0

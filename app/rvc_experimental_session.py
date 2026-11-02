@@ -21,8 +21,8 @@ def main(argv=None):
     parser.add_argument('--monitor-name', default='')
     parser.add_argument('--hear-myself', action='store_true')
     parser.add_argument('--pitch', type=float, default=-9)
-    parser.add_argument('--startup-ms', type=int, choices=(400, 600), default=400,
-                        help='Explicit startup queue; 600 adds 200 ms delay, not CPU speed')
+    parser.add_argument('--startup-ms', type=int, choices=(400, 600, 1000), default=400,
+                        help='Explicit startup queue; 600 adds200ms; experimental1000 adds600ms versus default, not CPU speed/readiness')
     parser.add_argument('--seconds', type=int, default=60,
                         help='Total trial time budget including model initialization')
     args = parser.parse_args(argv)

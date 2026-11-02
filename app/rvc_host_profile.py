@@ -19,8 +19,8 @@ class RvcHostProfile:
         """Validate dependencies before any device open; worker checks hashes."""
         if not math.isfinite(self.pitch) or not -24 <= self.pitch <= 24:
             raise ValueError('Invalid session pitch')
-        if type(self.startup_ms) is not int or self.startup_ms not in (400, 600):
-            raise ValueError('Explicit startup buffering must be 400 or 600 ms')
+        if type(self.startup_ms) is not int or self.startup_ms not in (400, 600, 1000):
+            raise ValueError('Explicit startup buffering must be 400, 600 or explicitly experimental1000 ms')
         paths = {name: Path(getattr(self, name)).resolve() for name in
                  ('python', 'snapshot', 'rvc_root', 'ort_packages', 'openvino_packages', 'log_file')}
         if not paths['python'].is_file():
