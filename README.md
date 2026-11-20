@@ -10,6 +10,8 @@ preset. Shared gain, gate, output level, mute, device selectors and live meters.
 
 ![VoiceFX desktop interface](assets/interface.png)
 
+[Portfolio case study and before-and-after audio demo](https://hamzamemon.me/projects/voicefx)
+
 ## Run
 
 Download the Windows release, extract it and open `VoiceFX.exe`.
