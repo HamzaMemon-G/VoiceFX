@@ -15,7 +15,7 @@ try {
     } else { throw 'Add a 64-bit MinGW g++ compiler or Zig to PATH.' }
     if ($LASTEXITCODE -ne 0) { throw 'Native DSP build failed' }
     if ($AI) {
-        & .venv/Scripts/python.exe -m pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cpu
+        & .venv/Scripts/python.exe -m pip install -r requirements-ai.txt
         if ($LASTEXITCODE -ne 0) { throw 'CPU AI installation failed' }
         & .venv/Scripts/python.exe app/download_models.py
         if ($LASTEXITCODE -ne 0) { throw 'Model download failed' }
