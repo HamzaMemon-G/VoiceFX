@@ -27,7 +27,9 @@ powershell -ExecutionPolicy Bypass -File .\Setup.ps1 -AI
 .\Start-VoiceFX.cmd
 ```
 
-Omit `-AI` for native effects only. To build the portable Windows app, run
+Omit `-AI` for native effects only. Optional AI uses the CPU-only PyTorch pin
+in `requirements-ai.txt`; rerun setup to upgrade older installations before
+loading checkpoints. Checksums verify identity, not publisher trust. To build the portable Windows app, run
 `Build.ps1` after setup with AI installed. No GPU or CUDA dependency.
 
 ## Routing and safe listening
@@ -123,3 +125,47 @@ put it in the local `VoiceFX/models` data folder as `pop-smoke-llvc.pth` or
 shows it in the AI model selector. It checks the checksum and loads weights
 strictly against the existing LLVC architecture; an RVC training checkpoint
 cannot be used there. The built-in models retain their original checksums.
+
+## Experimental CPU RVC runtime
+
+The optional process-isolated RVC host is a source-only experiment, separate from
+the normal UI. It requires a separately installed CPU inference environment,
+the exact checksum-verified local RVC checkout/runtime assets and explicit device
+selection. These dependencies and private runtime assets are not installed by
+`Setup.ps1`, included in the portable app, or uploaded to this repository. See
+[the trial setup and prerequisites](docs/rvc-experimental-trial.md) and
+[CPU validation results](docs/rvc-cpu-integration.md). The tested worker used
+CPU Torch/torchaudio2.7.1; do not replace the app's optional Torch installation
+with worker dependencies. The host and worker use separate interpreters.
+
+The explicitly selected `--startup-ms 1000` experiment produced first simulated
+output around1.14seconds in two five-minute public tests without cutoffs. One
+test failed the required CPU headroom. This is not verified physical microphone
+latency, gaming reliability or XPS readiness. The approved listening result
+does not establish live performance; the main app does not enable this backend.
+The Beatrice bundles above remain historical pilot comparisons, not the final
+validated custom-dialogue solution.
+
+## Verification and packaging
+
+After `Setup.ps1`, run the entire device-free suite (including native ABI, UI,
+process cleanup and buffer contracts):
+
+```powershell
+.venv\Scripts\python.exe -m unittest discover -s tests
+.venv\Scripts\python.exe -m pip check
+```
+
+`tests/test_beatrice_live.py` is an optional file-driven integration check that
+requires a separately installed VST3 and an explicit audio-file argument; normal
+unit-test discovery does not run that model benchmark.
+
+For an isolated packaging check without replacing a previous distribution:
+
+```powershell
+.\Build.ps1 -DistPath dist/review
+```
+
+Build outputs, local settings, credentials, runtime environments and private audio
+must stay out of Git. Application/native DSP source remains MIT; bundled
+dependencies retain their own licenses and notices. See [CHANGELOG.md](CHANGELOG.md).

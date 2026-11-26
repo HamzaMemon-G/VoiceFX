@@ -1,11 +1,16 @@
 """Copy installed dependency license files into the portable distribution."""
 
 from importlib.metadata import distributions
+import argparse
 from pathlib import Path
 import shutil
 
 root = Path(__file__).resolve().parent.parent
-target = root / "dist/VoiceFX/licenses"
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--dist-path', type=Path, default=Path('dist'))
+args = parser.parse_args()
+dist_root = (root / args.dist_path).resolve()
+target = dist_root / "VoiceFX/licenses"
 target.mkdir(parents=True, exist_ok=True)
 for dist in distributions():
     name = dist.metadata.get("Name", "package")
@@ -26,10 +31,11 @@ for dist in distributions():
                 shutil.copy2(source, dest)
 shutil.copy2(root / "LICENSE", target / "VoiceFX-MIT.txt")
 shutil.copy2(root / "THIRD-PARTY.md", target / "THIRD-PARTY.md")
-shutil.copy2(root / "THIRD-PARTY.md", root / "dist/VoiceFX/_internal/THIRD-PARTY.md")
-shutil.copy2(root / "README.md", root / "dist/VoiceFX/README.md")
+shutil.copy2(root / "THIRD-PARTY.md", dist_root / "VoiceFX/_internal/THIRD-PARTY.md")
+shutil.copy2(root / "README.md", dist_root / "VoiceFX/README.md")
+shutil.copy2(root / "CHANGELOG.md", dist_root / "VoiceFX/CHANGELOG.md")
 shutil.copytree(root / "licenses", target / "Qt", dirs_exist_ok=True)
-release = (root / "dist/VoiceFX").resolve()
+release = (dist_root / "VoiceFX").resolve()
 for cache in release.rglob("__pycache__"):
     if (
         cache.is_dir()
