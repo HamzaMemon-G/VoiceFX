@@ -5,12 +5,15 @@ import json
 import queue
 import threading
 import time
+from contextlib import ExitStack
+from monitor import Monitor
 from paths import DATA
 
 
 class Audio:
     def __init__(
-        self, input_name, output_name, notify, model_name="original", factor=8
+        self, input_name, output_name, notify, model_name="original", factor=8,
+        monitor_name="",
     ):
         self.pitch = -5.0
         self.formant = -3.0
@@ -28,6 +31,8 @@ class Audio:
         self.gate_db = -70
         self.input_name = input_name
         self.output_name = output_name
+        self.monitor_name = monitor_name
+        self.monitor = Monitor()
         self.notify = notify
         self.error = ""
         self.stop = threading.Event()
@@ -180,6 +185,7 @@ class Audio:
                 if not self.mute:
                     outdata[:] = y[:, None] * self.volume
                 self.stats["output_peak"] = float(np.max(np.abs(outdata)))
+                self.monitor.submit(outdata[:, 0])
 
             count = 0
             total_ms = 0.0
@@ -191,7 +197,22 @@ class Audio:
             process_info = psutil.Process()
             cpu_start = process_info.cpu_times()
             run_start = time.monotonic()
-            with sd.Stream(
+            with ExitStack() as streams:
+                if self.monitor_name:
+                    try:
+                        monitor_device, monitor_channels = resolve(self.monitor_name, "output")
+                        if monitor_device == out:
+                            raise RuntimeError("Choose headphones separate from the voice destination.")
+                        streams.enter_context(sd.OutputStream(
+                            device=monitor_device, samplerate=48000,
+                            blocksize=model.frames, channels=monitor_channels,
+                            dtype="float32", latency=0.12,
+                            callback=self.monitor.callback,
+                        ))
+                    except Exception as e:
+                        self.monitor.enabled = False
+                        self.notify("Headphone monitoring unavailable: " + str(e))
+                streams.enter_context(sd.Stream(
                 device=(inp, out),
                 samplerate=48000,
                 blocksize=model.frames,
@@ -199,7 +220,7 @@ class Audio:
                 dtype="float32",
                 latency=0.12,
                 callback=callback,
-            ):
+                ))
                 self.ready.set()
                 self.notify(
                     "Running | "

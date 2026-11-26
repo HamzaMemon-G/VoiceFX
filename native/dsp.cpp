@@ -42,6 +42,12 @@ struct DSP {
     bool configured=false;
     explicit DSP(Preset p,EffectSettings s=EffectSettings()):mode(p),ring(8192,0) { configure(s); }
     void configure(EffectSettings s) {
+        s.pitch=std::max(0,std::min(12,s.pitch));
+        s.style=s.style?1:0;
+        s.drive=std::max(0,std::min(100,s.drive));
+        s.noise=std::max(0,std::min(100,s.noise));
+        s.squelch=std::max(-80,std::min(-35,s.squelch));
+        s.clarity=std::max(0,std::min(100,s.clarity));
         if(configured && s.pitch==settings.pitch && s.style==settings.style && s.drive==settings.drive && s.noise==settings.noise && s.squelch==settings.squelch && s.clarity==settings.clarity)return;
         configured=true;
         settings=s;
@@ -128,10 +134,12 @@ struct DSP {
 };
 
 extern "C" {
-__declspec(dllexport) void* fx_create(int mode) { try{return new DSP(Preset(mode));}catch(...){return nullptr;} }
+__declspec(dllexport) void* fx_create(int mode) { if(mode<Pass || mode>Robot)return nullptr; try{return new DSP(Preset(mode));}catch(...){return nullptr;} }
 __declspec(dllexport) void fx_destroy(void* p) {delete static_cast<DSP*>(p);}
 __declspec(dllexport) void fx_process(void* p,const float* in,float* out,int frames,int pitch,int style,int drive,int noise,int squelch,int clarity) {
+ if(!out || frames<=0)return;
+ if(!p || !in){std::fill(out,out+frames,0.0f);return;}
  DSP* d=static_cast<DSP*>(p);EffectSettings s;s.pitch=pitch;s.style=style;s.drive=drive;s.noise=noise;s.squelch=squelch;s.clarity=clarity;d->configure(s);
- for(int i=0;i<frames;i++)out[i]=bound(d->tick(in[i]));
+ for(int i=0;i<frames;i++)out[i]=bound(d->tick(std::isfinite(in[i])?in[i]:0.0f));
 }
 }

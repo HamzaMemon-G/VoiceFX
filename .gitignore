@@ -19,3 +19,15 @@ last-session.json
 benchmark*.json
 .compiler/
 compiler.zip
+
+# Local secrets, private audio, runtime exports and generated tooling caches
+.env
+.env.*
+!.env.example
+*.m4a
+*.mp3
+*.onnx
+*.pt
+.pytest_cache/
+.ruff_cache/
+*.egg-info/

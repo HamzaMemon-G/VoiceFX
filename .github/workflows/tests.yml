@@ -15,14 +15,18 @@ jobs:
         shell: pwsh
         run: |
           Invoke-WebRequest 'https://ziglang.org/download/0.14.1/zig-x86_64-windows-0.14.1.zip' -OutFile compiler.zip
+          $expected = '554f5378228923ffd558eac35e21af020c73789d87afeabf4bfd16f2e6feed2c'
+          if ((Get-FileHash compiler.zip -Algorithm SHA256).Hash.ToLowerInvariant() -ne $expected) {
+            throw 'Compiler checksum mismatch'
+          }
           Expand-Archive compiler.zip -DestinationPath .compiler
           Add-Content $env:GITHUB_PATH (Join-Path $pwd '.compiler/zig-x86_64-windows-0.14.1')
       - name: Set up native app
         run: ./Setup.ps1
+      - name: Install optional CPU inference dependencies
+        run: .venv/Scripts/python.exe -m pip install -r requirements-ai.txt
       - name: Verify audio and UI
         shell: pwsh
         run: |
-          foreach ($test in @('test_dsp','test_character','test_audio','test_ui')) {
-            & .venv/Scripts/python.exe "tests/$test.py"
-            if ($LASTEXITCODE -ne 0) { throw "$test failed" }
-          }
+          & .venv/Scripts/python.exe -m unittest discover -s tests
+          if ($LASTEXITCODE -ne 0) { throw 'Offline test suite failed' }

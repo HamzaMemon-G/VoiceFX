@@ -1,0 +1,1912 @@
+{
+  "status": "automatic candidate, not listening approved",
+  "speaker_reference_seconds": [
+    [
+      0,
+      9.5
+    ],
+    [
+      16,
+      28
+    ]
+  ],
+  "sources": {
+    "55mqnH7nV7Q": "f4e26f1f76df3a8ce2b3e4cf5f93e02a409e94a43253ea9bed8b8a56cd2a9ca0",
+    "VSdDbCdkrgw": "d4a2e9cdb55e61240483420c89373f6ec5e41f624d1014cc4dde2d28468a6532",
+    "yaAwEWMPo64": "5180513edc6900531bcfbcaae2f66b4eaef84cabe9aff7e4324beb812f1e1fa4"
+  },
+  "clips": [
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 6.0,
+      "end": 9.0,
+      "score": 0.8594,
+      "half_scores": [
+        0.7863,
+        0.825
+      ],
+      "rms": 0.1154,
+      "split": "validation",
+      "path": "candidate/validation/55mqnH7nV7Q_00006.0.wav",
+      "sha256": "a19c18f414bcac04a67132a9195b6189044fe218b9df56cb9685f1d66a43e064"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 9.0,
+      "end": 12.0,
+      "score": 0.852,
+      "half_scores": [
+        0.8023,
+        0.8271
+      ],
+      "rms": 0.1238,
+      "split": "validation",
+      "path": "candidate/validation/55mqnH7nV7Q_00009.0.wav",
+      "sha256": "52f7596996ca2274d71b878dafbcc56f092998c55863327b91085aeed6ac9c02"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 12.0,
+      "end": 15.0,
+      "score": 0.8726,
+      "half_scores": [
+        0.8022,
+        0.7785
+      ],
+      "rms": 0.1094,
+      "split": "validation",
+      "path": "candidate/validation/55mqnH7nV7Q_00012.0.wav",
+      "sha256": "0a1ad123a4b6d00ff3462d1fdec3d05c4c472cdd9f6baa316abe80f4a61e5afb"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 15.0,
+      "end": 18.0,
+      "score": 0.872,
+      "half_scores": [
+        0.7717,
+        0.8314
+      ],
+      "rms": 0.0958,
+      "split": "validation",
+      "path": "candidate/validation/55mqnH7nV7Q_00015.0.wav",
+      "sha256": "6c7a8e699d25d2f102daf7bd583d1bb5108c20ac39681ad5044b8ba137fa38db"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 24.0,
+      "end": 27.0,
+      "score": 0.8528,
+      "half_scores": [
+        0.8157,
+        0.7824
+      ],
+      "rms": 0.102,
+      "split": "validation",
+      "path": "candidate/validation/55mqnH7nV7Q_00024.0.wav",
+      "sha256": "a2f4540e2b3c8ec230738befc4354e0dda424ef8f43826afcd7e787ac1d0c25d"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 207.0,
+      "end": 210.0,
+      "score": 0.8378,
+      "half_scores": [
+        0.8051,
+        0.7722
+      ],
+      "rms": 0.1212,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_00207.0.wav",
+      "sha256": "755f8f0ac79361b5d21f46c559c4b5bfaa18454588d11a5d7099a04787a3a18a"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 438.0,
+      "end": 441.0,
+      "score": 0.8542,
+      "half_scores": [
+        0.81,
+        0.804
+      ],
+      "rms": 0.1028,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_00438.0.wav",
+      "sha256": "cfa714a70ec828ced8b09168d12898dbba7bd7737262a444e41cc0b2e93d57d7"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 471.0,
+      "end": 474.0,
+      "score": 0.8531,
+      "half_scores": [
+        0.79,
+        0.7767
+      ],
+      "rms": 0.1145,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_00471.0.wav",
+      "sha256": "5cb6284494967815b4efa8febed3650147643e84e59b27d9f0c7db0e2ae2e959"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 510.0,
+      "end": 513.0,
+      "score": 0.8618,
+      "half_scores": [
+        0.7907,
+        0.8106
+      ],
+      "rms": 0.1121,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_00510.0.wav",
+      "sha256": "7a54469506793c00e59ce857ea1e1702115c2f308fcc1be5f3fca064d82b051f"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 516.0,
+      "end": 519.0,
+      "score": 0.8828,
+      "half_scores": [
+        0.8125,
+        0.8663
+      ],
+      "rms": 0.103,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_00516.0.wav",
+      "sha256": "feaf3559ebd59bc2c3430044c25799597e50d0a050a14b01f651d8c70b38c10f"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 627.0,
+      "end": 630.0,
+      "score": 0.8441,
+      "half_scores": [
+        0.7751,
+        0.8004
+      ],
+      "rms": 0.063,
+      "split": "validation",
+      "path": "candidate/validation/55mqnH7nV7Q_00627.0.wav",
+      "sha256": "9051030807f3aba146c0de60c0fa690077959d3ccd53e337cb9125bc52e05ed1"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 657.0,
+      "end": 660.0,
+      "score": 0.8522,
+      "half_scores": [
+        0.7734,
+        0.8438
+      ],
+      "rms": 0.1104,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_00657.0.wav",
+      "sha256": "90523e9c36714bb5290ad969066b426cae6fad43ebb345c21302b9c803b0e727"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 780.0,
+      "end": 783.0,
+      "score": 0.8693,
+      "half_scores": [
+        0.8223,
+        0.8448
+      ],
+      "rms": 0.1118,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_00780.0.wav",
+      "sha256": "95df6999bdd66c08f992ff2652b6a819a4592c9e11da8abae70e775da93e57a4"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 960.0,
+      "end": 963.0,
+      "score": 0.8496,
+      "half_scores": [
+        0.8044,
+        0.7767
+      ],
+      "rms": 0.1124,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_00960.0.wav",
+      "sha256": "4887e89265f2f01190dbaab338b512b306588405cc578324b0a9e5518a44f5d8"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 1137.0,
+      "end": 1140.0,
+      "score": 0.8568,
+      "half_scores": [
+        0.809,
+        0.8007
+      ],
+      "rms": 0.1048,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_01137.0.wav",
+      "sha256": "140e8b52279b3448de135d54b661935cdb27af3f77aa1e64af8e0b487d206167"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 1188.0,
+      "end": 1191.0,
+      "score": 0.8514,
+      "half_scores": [
+        0.7755,
+        0.7758
+      ],
+      "rms": 0.0966,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_01188.0.wav",
+      "sha256": "7c34ad34dfade846ddf54d5a5867f6ca5fbf85fbe3b97379efe091e90b0b8c9f"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 1203.0,
+      "end": 1206.0,
+      "score": 0.8405,
+      "half_scores": [
+        0.7714,
+        0.7797
+      ],
+      "rms": 0.0752,
+      "split": "validation",
+      "path": "candidate/validation/55mqnH7nV7Q_01203.0.wav",
+      "sha256": "d685ebb46db9e4725956efeb346085905d026354f3662b591c66c5d47c5b064e"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 1239.0,
+      "end": 1242.0,
+      "score": 0.8382,
+      "half_scores": [
+        0.7844,
+        0.7985
+      ],
+      "rms": 0.1034,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_01239.0.wav",
+      "sha256": "36cf589073d1644fad3fadfb0113083368a412b5d9496d7607be4d4487cead79"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 1242.0,
+      "end": 1245.0,
+      "score": 0.8695,
+      "half_scores": [
+        0.8237,
+        0.8215
+      ],
+      "rms": 0.1226,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_01242.0.wav",
+      "sha256": "871c016f2b35c832d0624897d04ac3389bc9fb04a6ab0c3fbdcbefb848e09be0"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 1254.0,
+      "end": 1257.0,
+      "score": 0.875,
+      "half_scores": [
+        0.8076,
+        0.8192
+      ],
+      "rms": 0.0659,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_01254.0.wav",
+      "sha256": "7d1ecbab49435c277bff1c7ab87c015a5d8e4504b93a371ae4c02163e6b212a7"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 1371.0,
+      "end": 1374.0,
+      "score": 0.8758,
+      "half_scores": [
+        0.8393,
+        0.822
+      ],
+      "rms": 0.1046,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_01371.0.wav",
+      "sha256": "699d04d5b3b708e59da9091f321d3a799de6785e856320522637c6e551f9cabc"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 1374.0,
+      "end": 1377.0,
+      "score": 0.8543,
+      "half_scores": [
+        0.7983,
+        0.7758
+      ],
+      "rms": 0.1003,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_01374.0.wav",
+      "sha256": "d93b7c7e8a255c7920be3d001b2e6bf010668572fad77da0f448e1f190b57d7f"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 1377.0,
+      "end": 1380.0,
+      "score": 0.8955,
+      "half_scores": [
+        0.8328,
+        0.8026
+      ],
+      "rms": 0.111,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_01377.0.wav",
+      "sha256": "8b0d3701d837c88cdcbb01db8f5771297f3e4f7c9a513ae60009cf71707f2030"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 1383.0,
+      "end": 1386.0,
+      "score": 0.8567,
+      "half_scores": [
+        0.8381,
+        0.7752
+      ],
+      "rms": 0.1309,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_01383.0.wav",
+      "sha256": "5cb64efd30d1d3949853ea4f30ff8014f3b35a7c671663b60fded5fbe60d13b3"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 1386.0,
+      "end": 1389.0,
+      "score": 0.8797,
+      "half_scores": [
+        0.8004,
+        0.8271
+      ],
+      "rms": 0.1108,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_01386.0.wav",
+      "sha256": "0d90c1dc3c434ac14547328e21959705e99fafdcdc8289ddcf7f69da8e81ae0e"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 1656.0,
+      "end": 1659.0,
+      "score": 0.8587,
+      "half_scores": [
+        0.7887,
+        0.8043
+      ],
+      "rms": 0.1198,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_01656.0.wav",
+      "sha256": "48c7d76cdafde72f855ccc7dd746ac558a839b0b14c30df83c76080318acb4dd"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 1713.0,
+      "end": 1716.0,
+      "score": 0.8571,
+      "half_scores": [
+        0.7816,
+        0.7755
+      ],
+      "rms": 0.1215,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_01713.0.wav",
+      "sha256": "78d7a66a85099afe08cc106b403666371c507e584fc34370754ae9d7cf8a47ec"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 2025.0,
+      "end": 2028.0,
+      "score": 0.8443,
+      "half_scores": [
+        0.7871,
+        0.7848
+      ],
+      "rms": 0.1143,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_02025.0.wav",
+      "sha256": "8ab8d9c9ae2f84d6565d0556ea389cb17d0800b5e23c2235c6ea296f486163f4"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 2031.0,
+      "end": 2034.0,
+      "score": 0.8393,
+      "half_scores": [
+        0.7851,
+        0.7707
+      ],
+      "rms": 0.1393,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_02031.0.wav",
+      "sha256": "0b5526eff9756403b46f206e7a608772dd29922d196a3baa9e404c3d90a91dce"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 2052.0,
+      "end": 2055.0,
+      "score": 0.851,
+      "half_scores": [
+        0.7746,
+        0.8041
+      ],
+      "rms": 0.0999,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_02052.0.wav",
+      "sha256": "51ca42c290d27fcfa909ebeaa0252c6d26299830dcd5104620815b810d6a052e"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 2088.0,
+      "end": 2091.0,
+      "score": 0.8951,
+      "half_scores": [
+        0.8089,
+        0.8111
+      ],
+      "rms": 0.0955,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_02088.0.wav",
+      "sha256": "5e488147a158c2cfe44914f5fd2b8aad1a55f579e5d5f5dd3c4b7fae929cc334"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 2094.0,
+      "end": 2097.0,
+      "score": 0.87,
+      "half_scores": [
+        0.8499,
+        0.7703
+      ],
+      "rms": 0.0823,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_02094.0.wav",
+      "sha256": "b4a2a97f897a17e26daa820474cced730f501d96fb41fd659a45c79e15fc8ec1"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 2112.0,
+      "end": 2115.0,
+      "score": 0.8516,
+      "half_scores": [
+        0.7838,
+        0.8041
+      ],
+      "rms": 0.1227,
+      "split": "validation",
+      "path": "candidate/validation/55mqnH7nV7Q_02112.0.wav",
+      "sha256": "72d7ab5a3e16e0d9b2ff2ce8d73a9a2a7ab978b15768c07cf0ba66378f8ecbf7"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 2124.0,
+      "end": 2127.0,
+      "score": 0.8408,
+      "half_scores": [
+        0.7724,
+        0.7952
+      ],
+      "rms": 0.1179,
+      "split": "validation",
+      "path": "candidate/validation/55mqnH7nV7Q_02124.0.wav",
+      "sha256": "315994c1601ff85741c7c2c13c43a2b4bc540c99f0549b6a94eca380a17cd878"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 2199.0,
+      "end": 2202.0,
+      "score": 0.8787,
+      "half_scores": [
+        0.8249,
+        0.8297
+      ],
+      "rms": 0.1107,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_02199.0.wav",
+      "sha256": "7bb635ba859848f424baf62557f95f7c7c890c1256ff82200473e3ddfbe2770e"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 2205.0,
+      "end": 2208.0,
+      "score": 0.871,
+      "half_scores": [
+        0.8006,
+        0.8248
+      ],
+      "rms": 0.1133,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_02205.0.wav",
+      "sha256": "121e1305ac8274f23aab5d10c3da9141b92e6f01ae7b922313bac7bc551e4a21"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 2214.0,
+      "end": 2217.0,
+      "score": 0.8656,
+      "half_scores": [
+        0.8089,
+        0.7959
+      ],
+      "rms": 0.1232,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_02214.0.wav",
+      "sha256": "af34f60ac5f4f675c66a209dc63ae6adf02c0f38c7f823e3e5d3a98d28164987"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 2235.0,
+      "end": 2238.0,
+      "score": 0.8514,
+      "half_scores": [
+        0.824,
+        0.7801
+      ],
+      "rms": 0.0829,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_02235.0.wav",
+      "sha256": "932c8fbcd18b9f679c75b3c30d7c4293d43d6c9df79cf3aa17c83b390e890b7d"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 2253.0,
+      "end": 2256.0,
+      "score": 0.8615,
+      "half_scores": [
+        0.8239,
+        0.7912
+      ],
+      "rms": 0.0726,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_02253.0.wav",
+      "sha256": "7585f571910c9c8d021fec8ca3549466390325ca05d879b8f7351cb70fd3fed9"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 2358.0,
+      "end": 2361.0,
+      "score": 0.8564,
+      "half_scores": [
+        0.7788,
+        0.8216
+      ],
+      "rms": 0.0889,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_02358.0.wav",
+      "sha256": "2c702ac5efa871d399932fe8a5ffd44e05840c3304298a783bd141dfbeccaa43"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 2415.0,
+      "end": 2418.0,
+      "score": 0.8553,
+      "half_scores": [
+        0.8348,
+        0.7716
+      ],
+      "rms": 0.1043,
+      "split": "validation",
+      "path": "candidate/validation/55mqnH7nV7Q_02415.0.wav",
+      "sha256": "01c02d81d8b3e58ced4017c517c8406d21c864e1dfdbe98b433ea86aaad97fb3"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 2463.0,
+      "end": 2466.0,
+      "score": 0.8512,
+      "half_scores": [
+        0.8431,
+        0.8048
+      ],
+      "rms": 0.0911,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_02463.0.wav",
+      "sha256": "d3ab627c14b48481e36c0f18595f19a27ce22cebad173b2d0589ae79d68e52bd"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 2481.0,
+      "end": 2484.0,
+      "score": 0.8308,
+      "half_scores": [
+        0.7804,
+        0.8157
+      ],
+      "rms": 0.1014,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_02481.0.wav",
+      "sha256": "70203e1dcaa395a2537432fabdc2ee4366ca255acda0422506d989870fb2e57b"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 2490.0,
+      "end": 2493.0,
+      "score": 0.8455,
+      "half_scores": [
+        0.8449,
+        0.7859
+      ],
+      "rms": 0.1254,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_02490.0.wav",
+      "sha256": "7ec4026cee6531984a3619df291840f6ad371c0c695045296c6ee58a88d8b7ce"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 2538.0,
+      "end": 2541.0,
+      "score": 0.8833,
+      "half_scores": [
+        0.7973,
+        0.8653
+      ],
+      "rms": 0.1057,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_02538.0.wav",
+      "sha256": "0c64c83192842cffcc07287f5f395928418bde1cc18e449bec20a9eb0fc3b56d"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 2562.0,
+      "end": 2565.0,
+      "score": 0.8358,
+      "half_scores": [
+        0.8112,
+        0.7833
+      ],
+      "rms": 0.0849,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_02562.0.wav",
+      "sha256": "a9e44ffe0ba9c196586f1bbb44ac5054d8e1ebb01a0c0b4c5d7a28f0dc0e6c7e"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 2577.0,
+      "end": 2580.0,
+      "score": 0.8535,
+      "half_scores": [
+        0.8087,
+        0.7832
+      ],
+      "rms": 0.0945,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_02577.0.wav",
+      "sha256": "156efce73ba8d407a2a594c87c6416fea5873e43f421ef558c43aa07a13a6649"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 2634.0,
+      "end": 2637.0,
+      "score": 0.8523,
+      "half_scores": [
+        0.8111,
+        0.7939
+      ],
+      "rms": 0.1139,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_02634.0.wav",
+      "sha256": "6b02b99467af70a76e65b2e219753918ab5a08de8a6af56a7e3e443c8027aefd"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 2673.0,
+      "end": 2676.0,
+      "score": 0.867,
+      "half_scores": [
+        0.8023,
+        0.8033
+      ],
+      "rms": 0.0876,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_02673.0.wav",
+      "sha256": "c75f8084e9871be79b64d91bf85b0f9f0aa817270ed149e1f0f5a379d24125bc"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=55mqnH7nV7Q",
+      "start": 2937.0,
+      "end": 2940.0,
+      "score": 0.8567,
+      "half_scores": [
+        0.8034,
+        0.7793
+      ],
+      "rms": 0.0963,
+      "split": "train",
+      "path": "candidate/train/55mqnH7nV7Q_02937.0.wav",
+      "sha256": "e58aa1e14ca1f6b4cf256055af8349a729e68f8b4e6d2f8048b69145ae4cafd4"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 0.0,
+      "end": 3.0,
+      "score": 0.8657,
+      "half_scores": [
+        0.7832,
+        0.8427
+      ],
+      "rms": 0.1181,
+      "split": "validation",
+      "path": "candidate/validation/VSdDbCdkrgw_00000.0.wav",
+      "sha256": "fcc4e2b224c4871e0b703397e94daa04f4b680b4cf1e8fa1114989cb9c304788"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 6.0,
+      "end": 9.0,
+      "score": 0.872,
+      "half_scores": [
+        0.811,
+        0.8087
+      ],
+      "rms": 0.1025,
+      "split": "validation",
+      "path": "candidate/validation/VSdDbCdkrgw_00006.0.wav",
+      "sha256": "39d9bb01c5c3b8b899f9a2d45c605479a9376776aab316ca79ad949948cc4f31"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 9.0,
+      "end": 12.0,
+      "score": 0.8533,
+      "half_scores": [
+        0.7839,
+        0.8041
+      ],
+      "rms": 0.1066,
+      "split": "validation",
+      "path": "candidate/validation/VSdDbCdkrgw_00009.0.wav",
+      "sha256": "48f9a589a1fc1764e386c7760f6421f9e53f3de3b4dc77178d6f2673dc67749b"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 33.0,
+      "end": 36.0,
+      "score": 0.8588,
+      "half_scores": [
+        0.8332,
+        0.8016
+      ],
+      "rms": 0.1271,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_00033.0.wav",
+      "sha256": "d5ac8dbb9b5a3f5ee4e3e5d74bd1f6bd835ec0e7012462c4d399796a25fb25b4"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 159.0,
+      "end": 162.0,
+      "score": 0.8429,
+      "half_scores": [
+        0.806,
+        0.7932
+      ],
+      "rms": 0.0906,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_00159.0.wav",
+      "sha256": "784001327d4325177590bc372c3e5780dd1503637a9456e4528abf326cf1f3a1"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 162.0,
+      "end": 165.0,
+      "score": 0.8358,
+      "half_scores": [
+        0.7851,
+        0.8349
+      ],
+      "rms": 0.1102,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_00162.0.wav",
+      "sha256": "521cb702c2fc5b4d1174dbda0510d5baaa625690680aa433e8c88633c9609ffc"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 165.0,
+      "end": 168.0,
+      "score": 0.8461,
+      "half_scores": [
+        0.801,
+        0.7826
+      ],
+      "rms": 0.0991,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_00165.0.wav",
+      "sha256": "a5da76937d4bd2b852261b9f099df5dc634d9e4e19163c7766738558ab95b486"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 180.0,
+      "end": 183.0,
+      "score": 0.856,
+      "half_scores": [
+        0.8128,
+        0.8125
+      ],
+      "rms": 0.0959,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_00180.0.wav",
+      "sha256": "800fb141e1eb5de44d9930197c6d9e5c7a34cab65d28d0f7746bf271db8966ba"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 234.0,
+      "end": 237.0,
+      "score": 0.8843,
+      "half_scores": [
+        0.831,
+        0.775
+      ],
+      "rms": 0.1191,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_00234.0.wav",
+      "sha256": "aba4fda4b91ae08400f2da5f167b40297adf9d87cd7bb1a96f3ce9468e4d9c33"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 237.0,
+      "end": 240.0,
+      "score": 0.8736,
+      "half_scores": [
+        0.8314,
+        0.8326
+      ],
+      "rms": 0.1114,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_00237.0.wav",
+      "sha256": "90664b7b2be88f2c0a21bcc43765a91c4c52d60030ef169f9fb7bf1c80e68e8a"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 240.0,
+      "end": 243.0,
+      "score": 0.8808,
+      "half_scores": [
+        0.784,
+        0.8618
+      ],
+      "rms": 0.0983,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_00240.0.wav",
+      "sha256": "db0bca762d0270df67714fc6719c7368d27676048b16922203384043ef55a196"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 258.0,
+      "end": 261.0,
+      "score": 0.8869,
+      "half_scores": [
+        0.8096,
+        0.8698
+      ],
+      "rms": 0.108,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_00258.0.wav",
+      "sha256": "3d1633868faa3d7798f81ecb5117f8ab2754c632757747cbfe9d045dce803a34"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 261.0,
+      "end": 264.0,
+      "score": 0.8368,
+      "half_scores": [
+        0.7901,
+        0.7986
+      ],
+      "rms": 0.0964,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_00261.0.wav",
+      "sha256": "ac117f3a3bde27489143f466de308870c96819c7351e2a97229e6fa2f5c485d9"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 264.0,
+      "end": 267.0,
+      "score": 0.8909,
+      "half_scores": [
+        0.8276,
+        0.7829
+      ],
+      "rms": 0.1099,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_00264.0.wav",
+      "sha256": "69cd4999e8ecf0871fa0cddc1559f979f75f97d290abddf22b62e978eabe578b"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 291.0,
+      "end": 294.0,
+      "score": 0.8705,
+      "half_scores": [
+        0.7739,
+        0.8145
+      ],
+      "rms": 0.113,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_00291.0.wav",
+      "sha256": "2c888cbf5c70eba39aeaaab2b91dadef65c2973362b9265103fe059fd4af3967"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 345.0,
+      "end": 348.0,
+      "score": 0.8878,
+      "half_scores": [
+        0.8006,
+        0.8074
+      ],
+      "rms": 0.0861,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_00345.0.wav",
+      "sha256": "b46527e47db833f2224c58725b7bba14aa2e7ef5f4063689a0f30ec4a0e1b537"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 360.0,
+      "end": 363.0,
+      "score": 0.8363,
+      "half_scores": [
+        0.8031,
+        0.7713
+      ],
+      "rms": 0.113,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_00360.0.wav",
+      "sha256": "1c2854a3d425e9754adc487af11905e12d84602a915ecb76c696b6cffa9a1ff4"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 621.0,
+      "end": 624.0,
+      "score": 0.8614,
+      "half_scores": [
+        0.784,
+        0.8579
+      ],
+      "rms": 0.1374,
+      "split": "validation",
+      "path": "candidate/validation/VSdDbCdkrgw_00621.0.wav",
+      "sha256": "e8fa13dd226d35858a7a72d53359b080e381054968c22718b9904fa1c115f7aa"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 630.0,
+      "end": 633.0,
+      "score": 0.8534,
+      "half_scores": [
+        0.8142,
+        0.786
+      ],
+      "rms": 0.099,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_00630.0.wav",
+      "sha256": "a3385d2b9ec19b9fa4d2bee96489e04c915c456eaf63cf630acd3ea2b6a2158f"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 669.0,
+      "end": 672.0,
+      "score": 0.8422,
+      "half_scores": [
+        0.7989,
+        0.8221
+      ],
+      "rms": 0.1233,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_00669.0.wav",
+      "sha256": "fafdf04b84170eea5c6e9076ed844256ed4f411e3879ac1462d0b4b7bdbaab22"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 681.0,
+      "end": 684.0,
+      "score": 0.8508,
+      "half_scores": [
+        0.7872,
+        0.8262
+      ],
+      "rms": 0.1068,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_00681.0.wav",
+      "sha256": "df72349dce65a6353b4ce7a28d0e1ee514a6c22676196d24f2d872a7defb3286"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 684.0,
+      "end": 687.0,
+      "score": 0.8847,
+      "half_scores": [
+        0.8125,
+        0.8704
+      ],
+      "rms": 0.1183,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_00684.0.wav",
+      "sha256": "99dff45832f55a7570ff37abac81f953864a0ebbe808dee8910f918b9621e5a7"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 765.0,
+      "end": 768.0,
+      "score": 0.8377,
+      "half_scores": [
+        0.7875,
+        0.8163
+      ],
+      "rms": 0.0967,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_00765.0.wav",
+      "sha256": "9974b10bf359e8d9395da5b203d31b7bcc898449e1f233d61a4631ddf83a5aa2"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 1140.0,
+      "end": 1143.0,
+      "score": 0.8643,
+      "half_scores": [
+        0.8235,
+        0.7965
+      ],
+      "rms": 0.1139,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_01140.0.wav",
+      "sha256": "1d078faa4edf87793f9aafe1fe058045649b0b019e998c353c094d16765b78f1"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 1188.0,
+      "end": 1191.0,
+      "score": 0.8551,
+      "half_scores": [
+        0.8292,
+        0.8353
+      ],
+      "rms": 0.1135,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_01188.0.wav",
+      "sha256": "8827173ddf1f3cfc549c422ef3d54bd403549193a02f0bbad6d853a16ef84d2d"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 1194.0,
+      "end": 1197.0,
+      "score": 0.8573,
+      "half_scores": [
+        0.7757,
+        0.8148
+      ],
+      "rms": 0.1043,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_01194.0.wav",
+      "sha256": "7c350e3b1c0a47971cf9d97f1cbf9f6ccf9a42aa7a056e5ccb102af79bb13eaf"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 1230.0,
+      "end": 1233.0,
+      "score": 0.86,
+      "half_scores": [
+        0.7888,
+        0.7795
+      ],
+      "rms": 0.105,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_01230.0.wav",
+      "sha256": "42c9844b1c72cdccae45097e40378ea4aa44ee9447575198ed04c4b8ec942932"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 1401.0,
+      "end": 1404.0,
+      "score": 0.854,
+      "half_scores": [
+        0.8,
+        0.7995
+      ],
+      "rms": 0.0677,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_01401.0.wav",
+      "sha256": "9348f2fa41b3ac8b4cc8b0b296515a8afe17653051dd2fe89c61a4b79928eba5"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 1452.0,
+      "end": 1455.0,
+      "score": 0.8474,
+      "half_scores": [
+        0.7901,
+        0.8208
+      ],
+      "rms": 0.1219,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_01452.0.wav",
+      "sha256": "0455263918a5b2083e384f7223a0b899790b53ddfdcfe0deae13eda42211d4dc"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 1458.0,
+      "end": 1461.0,
+      "score": 0.8557,
+      "half_scores": [
+        0.8097,
+        0.7935
+      ],
+      "rms": 0.101,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_01458.0.wav",
+      "sha256": "ee838575d7bd9b1cbdb8fb4ac39e8f4bd28b3a63240c0c58b44e7debedf4377b"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 1542.0,
+      "end": 1545.0,
+      "score": 0.8692,
+      "half_scores": [
+        0.8083,
+        0.8093
+      ],
+      "rms": 0.1146,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_01542.0.wav",
+      "sha256": "ccb12b1cac6df6872420e7b0c3f5e3cf73fb08fa54cce3084dd005ba1b9b2ef8"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 1686.0,
+      "end": 1689.0,
+      "score": 0.8338,
+      "half_scores": [
+        0.7765,
+        0.7925
+      ],
+      "rms": 0.0838,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_01686.0.wav",
+      "sha256": "3a4780ced0894c40f7f2c86d9542ec62a77cca2004555a525eb51f67b3dd0463"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 1689.0,
+      "end": 1692.0,
+      "score": 0.8441,
+      "half_scores": [
+        0.7952,
+        0.8046
+      ],
+      "rms": 0.0714,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_01689.0.wav",
+      "sha256": "57f6006fa12beb28a89f3d75292b2297d155e4c3e8b32130e619ec8d226faa2f"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 1740.0,
+      "end": 1743.0,
+      "score": 0.895,
+      "half_scores": [
+        0.83,
+        0.8617
+      ],
+      "rms": 0.0823,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_01740.0.wav",
+      "sha256": "804874825321e0a493081feb15a732f5bd9aee1ea84c160bcbe107d5e422b93b"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 1773.0,
+      "end": 1776.0,
+      "score": 0.8558,
+      "half_scores": [
+        0.7777,
+        0.7789
+      ],
+      "rms": 0.0706,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_01773.0.wav",
+      "sha256": "a6110983addb4f9b754940a5f52ecff89fc6000a290bb3edcc3e16460c872d39"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 1779.0,
+      "end": 1782.0,
+      "score": 0.8672,
+      "half_scores": [
+        0.8576,
+        0.7927
+      ],
+      "rms": 0.0944,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_01779.0.wav",
+      "sha256": "7986fc53b5cc2d3f572f24e2d8d8e3a0010b11e57ba68d074ce8006e57a422d3"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 1836.0,
+      "end": 1839.0,
+      "score": 0.8771,
+      "half_scores": [
+        0.8466,
+        0.8185
+      ],
+      "rms": 0.0763,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_01836.0.wav",
+      "sha256": "ee6f177be6a07e2c96f0d7698625d51ae79ba42ab680238278b28af89805412f"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 1944.0,
+      "end": 1947.0,
+      "score": 0.8882,
+      "half_scores": [
+        0.8311,
+        0.8207
+      ],
+      "rms": 0.1121,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_01944.0.wav",
+      "sha256": "ef8793a5e945c76ee5cd32372bac893820a355bc8e5844a515b268522d5eb22f"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 1983.0,
+      "end": 1986.0,
+      "score": 0.8973,
+      "half_scores": [
+        0.782,
+        0.8355
+      ],
+      "rms": 0.0946,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_01983.0.wav",
+      "sha256": "195f1fa1d666e254066c6aae3b8eca40d80bc8bb509ee14c03b6ed0c04220257"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 2007.0,
+      "end": 2010.0,
+      "score": 0.8386,
+      "half_scores": [
+        0.8395,
+        0.8012
+      ],
+      "rms": 0.1073,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_02007.0.wav",
+      "sha256": "960f7cf1865db1bc2ecf0afb80ec1f9cd8cd1d844022e7360c06935b1684b708"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=VSdDbCdkrgw",
+      "start": 2013.0,
+      "end": 2016.0,
+      "score": 0.8496,
+      "half_scores": [
+        0.836,
+        0.7928
+      ],
+      "rms": 0.0857,
+      "split": "train",
+      "path": "candidate/train/VSdDbCdkrgw_02013.0.wav",
+      "sha256": "9f975486a5a38eb23f4711e1507b91d24348d8eaabf90c1f81ad037cd0f618bb"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 0.0,
+      "end": 3.0,
+      "score": 0.9268,
+      "half_scores": [
+        0.8908,
+        0.8487
+      ],
+      "rms": 0.0632,
+      "split": "validation",
+      "path": "candidate/validation/yaAwEWMPo64_00000.0.wav",
+      "sha256": "13444669fe48bb121ed74730b93a32964c5de941b24cbdbd5b5abca0f48c9e43"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 3.0,
+      "end": 6.0,
+      "score": 0.9279,
+      "half_scores": [
+        0.8752,
+        0.8763
+      ],
+      "rms": 0.0644,
+      "split": "validation",
+      "path": "candidate/validation/yaAwEWMPo64_00003.0.wav",
+      "sha256": "e4af0e3296a9f6385c780fdce384bcf2cee303985a7863e9e79f18422b8f4059"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 6.0,
+      "end": 9.0,
+      "score": 0.9157,
+      "half_scores": [
+        0.8917,
+        0.842
+      ],
+      "rms": 0.0607,
+      "split": "validation",
+      "path": "candidate/validation/yaAwEWMPo64_00006.0.wav",
+      "sha256": "a53aa056dffcf973285bd37294e147da964df5d2961d896e012daf45e9bfd237"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 12.0,
+      "end": 15.0,
+      "score": 0.8403,
+      "half_scores": [
+        0.8055,
+        0.781
+      ],
+      "rms": 0.0448,
+      "split": "validation",
+      "path": "candidate/validation/yaAwEWMPo64_00012.0.wav",
+      "sha256": "2ba96e0f52444b5f1cfc2832570a7bf8c806f2e8e84675d6a3f056a94ddf42a8"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 18.0,
+      "end": 21.0,
+      "score": 0.9177,
+      "half_scores": [
+        0.8225,
+        0.8769
+      ],
+      "rms": 0.062,
+      "split": "validation",
+      "path": "candidate/validation/yaAwEWMPo64_00018.0.wav",
+      "sha256": "5594742e3ed8fbf7d5a8a29b6ebeab852a99130a23d73b29f42932f45dbaa948"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 24.0,
+      "end": 27.0,
+      "score": 0.9303,
+      "half_scores": [
+        0.8948,
+        0.8647
+      ],
+      "rms": 0.0685,
+      "split": "validation",
+      "path": "candidate/validation/yaAwEWMPo64_00024.0.wav",
+      "sha256": "efc0bd8d2f5093fc46cd746c3071cd35e42d787ba42dd911c36f6d59bf30729d"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 27.0,
+      "end": 30.0,
+      "score": 0.8644,
+      "half_scores": [
+        0.822,
+        0.7716
+      ],
+      "rms": 0.0659,
+      "split": "validation",
+      "path": "candidate/validation/yaAwEWMPo64_00027.0.wav",
+      "sha256": "9b6f7bf9117b32331efa0d947d30e2dc8ac922e9c3e2076b0a290e0d3feca086"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 36.0,
+      "end": 39.0,
+      "score": 0.903,
+      "half_scores": [
+        0.8657,
+        0.8153
+      ],
+      "rms": 0.0649,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_00036.0.wav",
+      "sha256": "ce6b71fdf60c93f5ab197a5ce96713aa03245e2b32879d96bff968ae23a24e53"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 42.0,
+      "end": 45.0,
+      "score": 0.8711,
+      "half_scores": [
+        0.833,
+        0.8125
+      ],
+      "rms": 0.0645,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_00042.0.wav",
+      "sha256": "469d880c59c7bf2259ca72cf7d687020954f56b1b000157277b383f1de2bc02e"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 45.0,
+      "end": 48.0,
+      "score": 0.8836,
+      "half_scores": [
+        0.7954,
+        0.8032
+      ],
+      "rms": 0.0588,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_00045.0.wav",
+      "sha256": "951d612f5f3d102761ca0ece1b63da9b840a7aeb1772466cee93abc8814dc028"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 63.0,
+      "end": 66.0,
+      "score": 0.8316,
+      "half_scores": [
+        0.7717,
+        0.7743
+      ],
+      "rms": 0.0609,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_00063.0.wav",
+      "sha256": "30f39dc357b4f548d9105b0bb98337a45fb28c92e4f30d53efed1b97db108417"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 66.0,
+      "end": 69.0,
+      "score": 0.8559,
+      "half_scores": [
+        0.8402,
+        0.7781
+      ],
+      "rms": 0.0659,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_00066.0.wav",
+      "sha256": "af09da176a855fe6db4b4818627879b71d78383fbd260eb98742c080b6474764"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 78.0,
+      "end": 81.0,
+      "score": 0.8518,
+      "half_scores": [
+        0.8026,
+        0.7993
+      ],
+      "rms": 0.0762,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_00078.0.wav",
+      "sha256": "f081029a5cec0b39d07a09a323f31358bdc527293d4c60474117c7e47f1ac3bc"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 93.0,
+      "end": 96.0,
+      "score": 0.844,
+      "half_scores": [
+        0.8345,
+        0.7728
+      ],
+      "rms": 0.0688,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_00093.0.wav",
+      "sha256": "3008494e9a8de04a5398ca3c5b9c270fc157bdcb6ce277ae0992c4ef9ebe920c"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 165.0,
+      "end": 168.0,
+      "score": 0.8613,
+      "half_scores": [
+        0.8001,
+        0.809
+      ],
+      "rms": 0.0574,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_00165.0.wav",
+      "sha256": "7a01534091870b2d432cf4d7363a94180acd09d7352f715573ecb87b2a8ad036"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 186.0,
+      "end": 189.0,
+      "score": 0.8778,
+      "half_scores": [
+        0.8662,
+        0.8169
+      ],
+      "rms": 0.0543,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_00186.0.wav",
+      "sha256": "a86ed294c47fc95115e7b3b19d72a8a4d1edd61bd78169dd390ac3bafa62bfd3"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 216.0,
+      "end": 219.0,
+      "score": 0.8652,
+      "half_scores": [
+        0.8161,
+        0.8281
+      ],
+      "rms": 0.0736,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_00216.0.wav",
+      "sha256": "9e1b5d75a1936e65d8d84edc55fe8640a6c92e854bf5b9fea9ed329f6c768b28"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 222.0,
+      "end": 225.0,
+      "score": 0.8676,
+      "half_scores": [
+        0.8399,
+        0.8034
+      ],
+      "rms": 0.0614,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_00222.0.wav",
+      "sha256": "016680acc3724bc3699625d495f959ea7cb7ef5831c00b0e4c3bb779bd2a74cc"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 225.0,
+      "end": 228.0,
+      "score": 0.8723,
+      "half_scores": [
+        0.8218,
+        0.8584
+      ],
+      "rms": 0.0662,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_00225.0.wav",
+      "sha256": "ccc149af8a659a43b2e50a6bb2df959d4d28ea5e936211fa3ddd2503c4808a1c"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 237.0,
+      "end": 240.0,
+      "score": 0.8582,
+      "half_scores": [
+        0.8228,
+        0.7859
+      ],
+      "rms": 0.0548,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_00237.0.wav",
+      "sha256": "535f4b580999f3ce552e19eb411253249e18b2c76e5092637df1fc29878029d8"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 264.0,
+      "end": 267.0,
+      "score": 0.854,
+      "half_scores": [
+        0.8254,
+        0.8062
+      ],
+      "rms": 0.0583,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_00264.0.wav",
+      "sha256": "4d8038ec669c83233b84adafb65b692933cac52ad3be11b5d56baa9d66226728"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 309.0,
+      "end": 312.0,
+      "score": 0.8488,
+      "half_scores": [
+        0.8004,
+        0.7971
+      ],
+      "rms": 0.0709,
+      "split": "validation",
+      "path": "candidate/validation/yaAwEWMPo64_00309.0.wav",
+      "sha256": "756b0958f54dcaf0d44827aab564f9b24ebef597eb90af7b4ace31156f4289fa"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 330.0,
+      "end": 333.0,
+      "score": 0.8444,
+      "half_scores": [
+        0.7975,
+        0.8165
+      ],
+      "rms": 0.0804,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_00330.0.wav",
+      "sha256": "2504ea5874acdd96344aaf803806fecf89b35c2b1f6a20a56b27bd91b860ea15"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 390.0,
+      "end": 393.0,
+      "score": 0.8612,
+      "half_scores": [
+        0.8245,
+        0.8154
+      ],
+      "rms": 0.0605,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_00390.0.wav",
+      "sha256": "e5fc39b5186f84f9f64634461e7996a4ec90cafd30c5fe97e19fd240ae0a4ecf"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 423.0,
+      "end": 426.0,
+      "score": 0.8826,
+      "half_scores": [
+        0.851,
+        0.7907
+      ],
+      "rms": 0.0598,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_00423.0.wav",
+      "sha256": "12e6c0665f5c05b3cbbe3f86fcc1f5a6565e5694c65303584831b473f6c6f21d"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 534.0,
+      "end": 537.0,
+      "score": 0.8746,
+      "half_scores": [
+        0.8198,
+        0.8296
+      ],
+      "rms": 0.0693,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_00534.0.wav",
+      "sha256": "a2f50f8d8e7ebf2c556b514c1a53a29ed8d6239825440fc11e34dcb66346ce66"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 627.0,
+      "end": 630.0,
+      "score": 0.8386,
+      "half_scores": [
+        0.78,
+        0.7868
+      ],
+      "rms": 0.0724,
+      "split": "validation",
+      "path": "candidate/validation/yaAwEWMPo64_00627.0.wav",
+      "sha256": "db20111d6aaa032d5e15122780ef22e40540586bee76a26de86092ce6ded2f35"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 636.0,
+      "end": 639.0,
+      "score": 0.8694,
+      "half_scores": [
+        0.7934,
+        0.8298
+      ],
+      "rms": 0.0663,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_00636.0.wav",
+      "sha256": "fbb763a3c5bc6db8ff4dd9d3fa9aceeae6b1797807c29907643b922286407669"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 639.0,
+      "end": 642.0,
+      "score": 0.8777,
+      "half_scores": [
+        0.8239,
+        0.8232
+      ],
+      "rms": 0.073,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_00639.0.wav",
+      "sha256": "14e98e9928726b031a92769f709504a88aa9bf164c12e11d901550ab8834b9c4"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 645.0,
+      "end": 648.0,
+      "score": 0.8929,
+      "half_scores": [
+        0.8374,
+        0.7744
+      ],
+      "rms": 0.0604,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_00645.0.wav",
+      "sha256": "aeb5dbfa24c4b2e2e6752f729d0b044498324f9d20038d54b1bca6ffea63f666"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 756.0,
+      "end": 759.0,
+      "score": 0.8627,
+      "half_scores": [
+        0.838,
+        0.7802
+      ],
+      "rms": 0.0673,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_00756.0.wav",
+      "sha256": "0166f5af93930b304da2a6c223c630709ff09935e634c323433661bc31bcee92"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 1206.0,
+      "end": 1209.0,
+      "score": 0.8855,
+      "half_scores": [
+        0.7955,
+        0.8558
+      ],
+      "rms": 0.0694,
+      "split": "validation",
+      "path": "candidate/validation/yaAwEWMPo64_01206.0.wav",
+      "sha256": "a243feaffefc5e1531e1b7aabb8d359105d3c161d40f55ae98fd31d9abf79d82"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 1239.0,
+      "end": 1242.0,
+      "score": 0.8682,
+      "half_scores": [
+        0.8301,
+        0.7889
+      ],
+      "rms": 0.062,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_01239.0.wav",
+      "sha256": "5011d62183941547719cb8b474801f68d73284ed170e17271498dba0eb60fc04"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 1263.0,
+      "end": 1266.0,
+      "score": 0.8608,
+      "half_scores": [
+        0.8185,
+        0.8061
+      ],
+      "rms": 0.0668,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_01263.0.wav",
+      "sha256": "424d208c38708e641465e5b71d8ae731cf4ba975af9684715ca96eb4661f2ec9"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 1299.0,
+      "end": 1302.0,
+      "score": 0.8958,
+      "half_scores": [
+        0.814,
+        0.837
+      ],
+      "rms": 0.0634,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_01299.0.wav",
+      "sha256": "6917af55ca65190fd1ad66b3544a06638c325300be316fb3a426070ba1db09e7"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 1356.0,
+      "end": 1359.0,
+      "score": 0.853,
+      "half_scores": [
+        0.8143,
+        0.8174
+      ],
+      "rms": 0.0728,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_01356.0.wav",
+      "sha256": "f40eb7fbd9096a328ba15aed60b9adf5a92787b5add2f4b86c2530e5e5ee2769"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 1368.0,
+      "end": 1371.0,
+      "score": 0.8892,
+      "half_scores": [
+        0.7745,
+        0.8159
+      ],
+      "rms": 0.0561,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_01368.0.wav",
+      "sha256": "e65f02fb3fb17549783cb6e0774ae2f21236fd5d3d51f160ed961448f2e058a3"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 1380.0,
+      "end": 1383.0,
+      "score": 0.852,
+      "half_scores": [
+        0.8161,
+        0.7763
+      ],
+      "rms": 0.0588,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_01380.0.wav",
+      "sha256": "9c32331d4104501432989f2a169951458857c44f57264565dc93a7f77fcad97d"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 1383.0,
+      "end": 1386.0,
+      "score": 0.879,
+      "half_scores": [
+        0.8062,
+        0.8482
+      ],
+      "rms": 0.0786,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_01383.0.wav",
+      "sha256": "b1e49a18b6bee4b09e1e7d5cf55d4d294cb7326cdc6f49c100f4a64d39510237"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 1389.0,
+      "end": 1392.0,
+      "score": 0.8743,
+      "half_scores": [
+        0.8134,
+        0.8157
+      ],
+      "rms": 0.0577,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_01389.0.wav",
+      "sha256": "a3fcc0503ce88fed56f9cc8f2fd33f0471fbbc95fe23333757f27f2d64bfa3f8"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 1395.0,
+      "end": 1398.0,
+      "score": 0.8872,
+      "half_scores": [
+        0.8664,
+        0.8464
+      ],
+      "rms": 0.0514,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_01395.0.wav",
+      "sha256": "5d17014aeea546e147c71ca1278a66eb428ea9792ceb311a755f71e5adb80d80"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 1437.0,
+      "end": 1440.0,
+      "score": 0.846,
+      "half_scores": [
+        0.7761,
+        0.7916
+      ],
+      "rms": 0.0553,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_01437.0.wav",
+      "sha256": "06349bd813f1f14ec43d84ae0cd35553970f30541fd53c5d8cec575a1fdb85ee"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 1452.0,
+      "end": 1455.0,
+      "score": 0.8475,
+      "half_scores": [
+        0.779,
+        0.7762
+      ],
+      "rms": 0.0551,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_01452.0.wav",
+      "sha256": "e6d0908c9662ba055feb644a1f9fecbb75d99d203da492ef1a45a3af32d2a33e"
+    },
+    {
+      "source": "https://www.youtube.com/watch?v=yaAwEWMPo64",
+      "start": 1461.0,
+      "end": 1464.0,
+      "score": 0.887,
+      "half_scores": [
+        0.801,
+        0.8362
+      ],
+      "rms": 0.057,
+      "split": "train",
+      "path": "candidate/train/yaAwEWMPo64_01461.0.wav",
+      "sha256": "8f46c3c21afe3df900b0fe2c555a8d8ab948359da1ef622849de54d71b857d87"
+    }
+  ],
+  "train_seconds": 333,
+  "validation_seconds": 72
+}

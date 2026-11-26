@@ -27,7 +27,10 @@ powershell -ExecutionPolicy Bypass -File .\Setup.ps1 -AI
 .\Start-VoiceFX.cmd
 ```
 
-Omit `-AI` for native effects only. To build the portable Windows app, run
+Omit `-AI` for native effects only. Optional AI uses the CPU-only PyTorch pin
+in `requirements-ai.txt`; setup first updates installation tools using
+`bootstrap-requirements.txt`. Rerun setup to upgrade older installations before
+loading checkpoints. Checksums verify identity, not publisher trust. To build the portable Windows app, run
 `Build.ps1` after setup with AI installed. No GPU or CUDA dependency.
 
 ## Routing and safe listening
@@ -55,6 +58,10 @@ changes Voicemeeter configuration.
 Native effects use 20 ms chunks. AI defaults to stable 104 ms chunks, with two
 chunks of scheduling headroom plus 64 ms character processing. Driver, VBAN,
 network and game buffers add further delay. Chunk size is **not** total latency.
+Beatrice voices first check 50 ms chunks through the official VST3 and fall back
+to 100 ms chunks if needed; the response menu does not change their block size.
+The desktop offline benchmark does not predict XPS performance or end-to-end
+game latency.
 The MME driver requests a conservative 120 ms buffer for reliable virtual routing.
 Experimental 52 ms AI may stop on a busy laptop. Measure the full round trip by
 recording a clap/reference sound and the returned headphone signal, then compare
@@ -74,6 +81,19 @@ Use your own judgment and server rules when using voice effects.
 
 ## Development
 
+For separate desktop GPU training and the custom LLVC model path, see
+[Offline custom voice training](training/README.md). The training preflight is
+independent of the CPU-only real-time app and does not change audio routing.
+
+The separately trained [Beatrice v2 pilot voices](models/beatrice/README.md)
+include listening previews and reproducibility details. To use them in VoiceFX,
+install the official Beatrice v2 Windows VST3 separately into
+`%LOCALAPPDATA%\VoiceFX\plugins` or the standard Windows VST3 folder. The
+plug-in itself is not bundled with VoiceFX. When installed, Pop Smoke and Opie
+appear in the AI model selector after bundle checksums pass. They use 50 or 100 ms streaming blocks with the same
+selected input, output, and optional headphone monitor as other modes. Changing
+voices requires stopping audio first. XPS live performance remains untested.
+
 ```powershell
 .venv\Scripts\python.exe tests\test_dsp.py
 .venv\Scripts\python.exe tests\test_character.py
@@ -83,5 +103,70 @@ Use your own judgment and server rules when using voice effects.
 MIT for the application and native DSP. Third-party licenses and pinned source
 revisions are listed in [THIRD-PARTY.md](THIRD-PARTY.md). The Windows interface
 uses dynamically linked PySide6/Qt under LGPLv3; its library licenses travel with
-the release. Contributions welcome. Windows 10/11, 64-bit; other platforms are
+the release. Portable builds including Pedalboard also include its GPLv3 license
+and dependency notices. Contributions welcome. Windows 10/11, 64-bit; other platforms are
 not currently supported.
+
+## Self-monitoring
+
+Choose an optional headphone device separate from the voice destination before
+starting. **Hear myself** turns VoiceFX's own headphone feed on or off while
+the voice destination continues. Monitoring starts off each time the app opens.
+**Mute output** still silences the voice destination.
+
+This control does not change Voicemeeter or VBAN routing. If Voicemeeter itself
+already sends your voice to your headphones, that external playback remains.
+
+## Custom CPU models
+
+When a trained LLVC checkpoint has passed quality and CPU performance checks,
+put it in the local `VoiceFX/models` data folder as `pop-smoke-llvc.pth` or
+`opie-llvc.pth`. Record its lowercase SHA-256 checksum in
+`custom-models.json` under the matching `pop_smoke` or `opie` key. The app then
+shows it in the AI model selector. It checks the checksum and loads weights
+strictly against the existing LLVC architecture; an RVC training checkpoint
+cannot be used there. The built-in models retain their original checksums.
+
+## Experimental CPU RVC runtime
+
+The optional process-isolated RVC host is a source-only experiment, separate from
+the normal UI. It requires a separately installed CPU inference environment,
+the exact checksum-verified local RVC checkout/runtime assets and explicit device
+selection. These dependencies and private runtime assets are not installed by
+`Setup.ps1`, included in the portable app, or uploaded to this repository. See
+[the trial setup and prerequisites](docs/rvc-experimental-trial.md) and
+[CPU validation results](docs/rvc-cpu-integration.md). The tested worker used
+CPU Torch/torchaudio2.7.1; do not replace the app's optional Torch installation
+with worker dependencies. The host and worker use separate interpreters.
+
+The explicitly selected `--startup-ms 1000` experiment produced first simulated
+output around1.14seconds in two five-minute public tests without cutoffs. One
+test failed the required CPU headroom. This is not verified physical microphone
+latency, gaming reliability or XPS readiness. The approved listening result
+does not establish live performance; the main app does not enable this backend.
+The Beatrice bundles above remain historical pilot comparisons, not the final
+validated custom-dialogue solution.
+
+## Verification and packaging
+
+After `Setup.ps1`, run the entire device-free suite (including native ABI, UI,
+process cleanup and buffer contracts):
+
+```powershell
+.venv\Scripts\python.exe -m unittest discover -s tests
+.venv\Scripts\python.exe -m pip check
+```
+
+`tests/test_beatrice_live.py` is an optional file-driven integration check that
+requires a separately installed VST3 and an explicit audio-file argument; normal
+unit-test discovery does not run that model benchmark.
+
+For an isolated packaging check without replacing a previous distribution:
+
+```powershell
+.\Build.ps1 -DistPath dist/review
+```
+
+Build outputs, local settings, credentials, runtime environments and private audio
+must stay out of Git. Application/native DSP source remains MIT; bundled
+dependencies retain their own licenses and notices. See [CHANGELOG.md](CHANGELOG.md).
