@@ -28,7 +28,8 @@ powershell -ExecutionPolicy Bypass -File .\Setup.ps1 -AI
 ```
 
 Omit `-AI` for native effects only. Optional AI uses the CPU-only PyTorch pin
-in `requirements-ai.txt`; rerun setup to upgrade older installations before
+in `requirements-ai.txt`; setup first updates installation tools using
+`bootstrap-requirements.txt`. Rerun setup to upgrade older installations before
 loading checkpoints. Checksums verify identity, not publisher trust. To build the portable Windows app, run
 `Build.ps1` after setup with AI installed. No GPU or CUDA dependency.
 

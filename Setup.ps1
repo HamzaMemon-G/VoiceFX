@@ -6,6 +6,8 @@ try {
         & py -3.12 -m venv .venv
         if ($LASTEXITCODE -ne 0) { throw 'Install Python 3.12 first.' }
     }
+    & .venv/Scripts/python.exe -m pip install -r bootstrap-requirements.txt
+    if ($LASTEXITCODE -ne 0) { throw 'Installation tool update failed' }
     & .venv/Scripts/python.exe -m pip install -r requirements.txt
     if ($LASTEXITCODE -ne 0) { throw 'Dependency installation failed' }
     if (Get-Command zig -ErrorAction SilentlyContinue) {

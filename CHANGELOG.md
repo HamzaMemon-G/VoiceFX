@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Pin patched pip26.3/setuptools84.2.1 installation tools and filelock4.3.1
+  for optional inference, including fresh setup and packaging environments.
+
 - Replace the vulnerable optional app PyTorch2.5.1 pin with CPU-only2.15.0.
   Keep experimental RVC dependencies isolated and frozen runtime assets intact.
   This removes the old pin affected by
