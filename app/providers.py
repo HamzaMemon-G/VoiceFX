@@ -12,12 +12,14 @@ class Native:
         self.lib.fx_create.argtypes = [ctypes.c_int]
         self.lib.fx_create.restype = ctypes.c_void_p
         self.lib.fx_destroy.argtypes = [ctypes.c_void_p]
+        self.lib.fx_destroy.restype = None
         self.lib.fx_process.argtypes = [
             ctypes.c_void_p,
             ctypes.POINTER(ctypes.c_float),
             ctypes.POINTER(ctypes.c_float),
             ctypes.c_int,
         ] + [ctypes.c_int] * 6
+        self.lib.fx_process.restype = None
         self.ptr = self.lib.fx_create(
             {"clean": 0, "deep": 1, "police": 2, "atc": 2, "robot": 3}[a.model_name]
         )
@@ -25,15 +27,25 @@ class Native:
             raise RuntimeError("Cannot prepare native effect")
 
     def reset(self):
-        self.lib.fx_destroy(self.ptr)
+        previous, self.ptr = self.ptr, None
+        self.lib.fx_destroy(previous)
         self.ptr = self.lib.fx_create(
             {"clean": 0, "deep": 1, "police": 2, "atc": 2, "robot": 3}[
                 self.a.model_name
             ]
         )
+        if not self.ptr:
+            raise RuntimeError("Cannot reset native effect")
 
     def convert48(self, x, pitch=0, formant=0):
+        x = np.asarray(x)
+        if x.ndim != 1 or np.iscomplexobj(x):
+            raise ValueError("Native effects require finite mono audio")
         x = np.ascontiguousarray(x, dtype=np.float32)
+        if not np.isfinite(x).all():
+            raise ValueError("Native effects require finite mono audio")
+        if not self.ptr:
+            raise RuntimeError("Native effect is not initialized")
         y = np.empty_like(x)
         s = dict(self.a.effect)
         s["style"] = int(self.a.model_name == "atc")
